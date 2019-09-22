@@ -66,8 +66,11 @@ namespace TestTask.Migrations
                 columns: new[] { "Id", "DateOfBirth", "FirstName", "Gender", "LastName", "SNILS", "SecondName" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1980, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Иван", "м", "Васильев", "001", null },
-                    { 2, new DateTime(1990, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василий", "м", "Иванов", "002", null }
+                    { 1, new DateTime(1980, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Иван", "м", "Васильев", "112-233-445 95", null },
+                    { 2, new DateTime(1990, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василий", "м", "Иванов", "112-233-446 96", null },
+                    { 3, new DateTime(1995, 7, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), "Алексей", "м", "Смирнов", "112-233-436 94", null },
+                    { 4, new DateTime(1965, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Петр", "м", "Иванов", "111-233-446 89", null },
+                    { 5, new DateTime(1985, 11, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Валентина", "ж", "Иванова", "111-133-446 83", null }
                 });
 
             migrationBuilder.InsertData(

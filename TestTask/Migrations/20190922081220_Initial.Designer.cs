@@ -10,7 +10,7 @@ using TestTask.Models;
 namespace TestTask.Migrations
 {
     [DbContext(typeof(VaccinationsContext))]
-    [Migration("20190920150931_Initial")]
+    [Migration("20190922081220_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace TestTask.Migrations
                             FirstName = "Иван",
                             Gender = "м",
                             LastName = "Васильев",
-                            SNILS = "001"
+                            SNILS = "112-233-445 95"
                         },
                         new
                         {
@@ -65,7 +65,34 @@ namespace TestTask.Migrations
                             FirstName = "Василий",
                             Gender = "м",
                             LastName = "Иванов",
-                            SNILS = "002"
+                            SNILS = "112-233-446 96"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DateOfBirth = new DateTime(1995, 7, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Алексей",
+                            Gender = "м",
+                            LastName = "Смирнов",
+                            SNILS = "112-233-436 94"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DateOfBirth = new DateTime(1965, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Петр",
+                            Gender = "м",
+                            LastName = "Иванов",
+                            SNILS = "111-233-446 89"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DateOfBirth = new DateTime(1985, 11, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Валентина",
+                            Gender = "ж",
+                            LastName = "Иванова",
+                            SNILS = "111-133-446 83"
                         });
                 });
 

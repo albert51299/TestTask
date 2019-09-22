@@ -18,7 +18,7 @@ namespace TestTask.Models {
                         LastName = "Васильев",
                         DateOfBirth = new System.DateTime(1980, 1, 2),
                         Gender = "м",
-                        SNILS = "001"
+                        SNILS = "112-233-445 95"
                     },
                     new Patient {
                         Id = 2,
@@ -26,7 +26,31 @@ namespace TestTask.Models {
                         LastName = "Иванов",
                         DateOfBirth = new System.DateTime(1990, 3, 4),
                         Gender = "м",
-                        SNILS = "002"
+                        SNILS = "112-233-446 96"
+                    },
+                    new Patient {
+                        Id = 3,
+                        FirstName = "Алексей",
+                        LastName = "Смирнов",
+                        DateOfBirth = new System.DateTime(1995, 7, 26),
+                        Gender = "м",
+                        SNILS = "112-233-436 94"
+                    },
+                    new Patient {
+                        Id = 4,
+                        FirstName = "Петр",
+                        LastName = "Иванов",
+                        DateOfBirth = new System.DateTime(1965, 9, 15),
+                        Gender = "м",
+                        SNILS = "111-233-446 89"
+                    },
+                    new Patient {
+                        Id = 5,
+                        FirstName = "Валентина",
+                        LastName = "Иванова",
+                        DateOfBirth = new System.DateTime(1985, 11, 18),
+                        Gender = "ж",
+                        SNILS = "111-133-446 83"
                     }
                 );
 
