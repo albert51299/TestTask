@@ -4,10 +4,22 @@ class PatientTableRow extends React.Component {
 
         var name = props.patient.lastName + " " + props.patient.firstName + " " + 
             (props.patient.secondName !== null ? this.props.patient.secondName : "");
-        var dateTime = new Date(props.patient.dateOfBirth);
-        var date = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDay()).toLocaleDateString("ru");
-
+        var tempDate = props.patient.dateOfBirth.substr(0, 10);
+        var date = tempDate.substr(8,2) + "." + tempDate.substr(5,2) + "." + tempDate.substr(0,4);
         this.state = { patient: props.patient, fullName: name, dateOfBirth: date };
+
+        this.editHandler = this.editHandler.bind(this);
+        this.deleteHandler = this.deleteHandler.bind(this);
+    }
+
+    editHandler() {
+        sessionStorage.setItem("id", this.props.patient.id);
+        window.location.href = "./editPatientForm.html";
+    }
+
+    deleteHandler() {
+        sessionStorage.setItem("id", this.props.patient.id);
+        window.location.href = "./deletePatientForm.html";
     }
 
     render() {
@@ -20,10 +32,10 @@ class PatientTableRow extends React.Component {
                     <input type="button" value="Показать прививки" className="btn btn-primary btn-sm"></input>
                 </td>
                 <td>
-                    <input type="button" value="Редактировать" className="btn btn-secondary btn-sm"></input>
+                    <input type="button" value="Редактировать" className="btn btn-secondary btn-sm" onClick={this.editHandler}></input>
                 </td>
                 <td>
-                    <input type="button" value="Удалить" className="btn btn-danger btn-sm"></input>
+                    <input type="button" value="Удалить" className="btn btn-danger btn-sm" onClick={this.deleteHandler}></input>
                 </td>
             </tr>
         );

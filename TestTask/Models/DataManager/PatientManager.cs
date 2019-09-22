@@ -25,7 +25,14 @@ namespace TestTask.Models.DataManager {
         }
 
         public void Update(Patient patient) {
-            db.Entry(patient).State = EntityState.Modified;
+            Patient fromDB = db.Patients.FirstOrDefault(p => p.Id == patient.Id);
+            fromDB.FirstName = patient.FirstName;
+            fromDB.SecondName = patient.SecondName;
+            fromDB.LastName = patient.LastName;
+            fromDB.DateOfBirth = patient.DateOfBirth;
+            fromDB.Gender = patient.Gender;
+            fromDB.SNILS = patient.SNILS;
+            db.Entry(fromDB).State = EntityState.Modified;
             db.SaveChanges();
         }
 

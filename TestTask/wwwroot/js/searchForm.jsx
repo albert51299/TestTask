@@ -75,6 +75,7 @@ class SearchForm extends React.Component {
         }
         this.props.changeDisplayedPatients(searchResult);
         this.props.changeSearchState(false);
+        this.props.changeShowAllPatientsState(false);
     }
 
     cancelHandler() {
