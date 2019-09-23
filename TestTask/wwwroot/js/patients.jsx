@@ -52,7 +52,7 @@ class Content extends React.Component {
     }
 
     loadAllPatients() {
-        fetch("api/Patient", {
+        fetch("api/patient", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
