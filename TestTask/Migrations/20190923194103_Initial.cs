@@ -48,7 +48,7 @@ namespace TestTask.Migrations
                     VaccineName = table.Column<string>(nullable: false),
                     Consent = table.Column<bool>(nullable: false),
                     Date = table.Column<DateTime>(type: "DATE", nullable: false),
-                    PatientId = table.Column<int>(nullable: false)
+                    PatientId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,7 +58,7 @@ namespace TestTask.Migrations
                         column: x => x.PatientId,
                         principalTable: "Patients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.InsertData(

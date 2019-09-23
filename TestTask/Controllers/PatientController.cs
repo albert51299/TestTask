@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
 
@@ -15,17 +15,18 @@ namespace TestTask.Controllers {
 
         [HttpGet]
         public IActionResult Get() {
-            IEnumerable<Patient> patients = repository.GetAll();
+            IQueryable<Patient> patients = repository.GetAll();
             return Ok(patients);
         }
-
+        
         [HttpGet("{id}")]
         public IActionResult Get(int id) {
-            Patient patient = repository.Get(id);
-            if (patient == null) {
+            IQueryable<Patient> patients = repository.GetByCondition(p => p.Id == id);
+            if (patients.Count() == 0) {
                 return NotFound();
             }
 
+            Patient patient = patients.First();
             return Ok(patient);
         }
 
@@ -45,7 +46,8 @@ namespace TestTask.Controllers {
                 return BadRequest();
             }
 
-            if (repository.Get(patient.Id) == null) {
+            IQueryable<Patient> patients = repository.GetByCondition(p => p.Id == patient.Id);
+            if (patients.Count() == 0) {
                 return NotFound();
             }
 
@@ -55,7 +57,8 @@ namespace TestTask.Controllers {
 
         [HttpDelete("{id}")]
         public IActionResult Put(int id) {
-            if (repository.Get(id) == null) {
+            IQueryable<Patient> patients = repository.GetByCondition(p => p.Id == id);
+            if (patients.Count() == 0) {
                 return NotFound();
             }
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
 
@@ -7,30 +7,41 @@ namespace TestTask.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class VaccinationController : ControllerBase {
-        private readonly IDataRepository<Vaccination> repository;
+        private readonly IDataRepository<VaccinationVM> repository;
 
-        public VaccinationController(IDataRepository<Vaccination> dataRepository) {
+        public VaccinationController(IDataRepository<VaccinationVM> dataRepository) {
             repository = dataRepository;
         }
 
         [HttpGet]
         public IActionResult Get() {
-            IEnumerable<Vaccination> vaccinations = repository.GetAll();
+            IQueryable<VaccinationVM> vaccinations = repository.GetAll();
             return Ok(vaccinations);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(int id) {
-            Vaccination vaccination = repository.Get(id);
-            if (vaccination == null) {
+        [HttpGet]
+        [Route("[action]/{id}")]
+        [ActionName("GetVaccinations")]
+        public IActionResult GetVaccinations(int id) {
+            IQueryable<VaccinationVM> vaccinations = repository.GetByCondition(v => v.PatientId == id);
+            return Ok(vaccinations);
+        }
+
+        [HttpGet]
+        [Route("[action]/{id}")]
+        [ActionName("GetVaccination")]
+        public IActionResult GetVaccination(int id) {
+            IQueryable<VaccinationVM> vaccinations = repository.GetByCondition(v => v.Id == id);
+            if (vaccinations.Count() == 0) {
                 return NotFound();
             }
 
+            VaccinationVM vaccination = vaccinations.First();
             return Ok(vaccination);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Vaccination vaccination) {
+        public IActionResult Post([FromBody]VaccinationVM vaccination) {
             if (vaccination == null) {
                 return BadRequest();
             }
@@ -40,12 +51,13 @@ namespace TestTask.Controllers {
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]Vaccination vaccination) {
+        public IActionResult Put([FromBody]VaccinationVM vaccination) {
             if (vaccination == null) {
                 return BadRequest();
             }
 
-            if (repository.Get(vaccination.Id) == null) {
+            IQueryable<VaccinationVM> vaccinations = repository.GetByCondition(v => v.Id == vaccination.Id);
+            if (vaccinations.Count() == 0) {
                 return NotFound();
             }
 
@@ -54,8 +66,9 @@ namespace TestTask.Controllers {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Put(int id) {
-            if (repository.Get(id) == null) {
+        public IActionResult Delete(int id) {
+            IQueryable<VaccinationVM> vaccinations = repository.GetByCondition(v => v.Id == id);
+            if (vaccinations.Count() == 0) {
                 return NotFound();
             }
 

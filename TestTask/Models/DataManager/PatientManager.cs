@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using TestTask.Models.Repository;
 
 namespace TestTask.Models.DataManager {
@@ -11,12 +12,12 @@ namespace TestTask.Models.DataManager {
             db = context;
         }
 
-        public IEnumerable<Patient> GetAll() {
+        public IQueryable<Patient> GetAll() {
             return db.Patients;
         }
 
-        public Patient Get(int id) {
-            return db.Patients.FirstOrDefault(p => p.Id == id);
+        public IQueryable<Patient> GetByCondition(Expression<Func<Patient, bool>> expression) {
+            return db.Patients.Where(expression);
         }
 
         public void Add(Patient patient) {

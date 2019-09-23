@@ -5,12 +5,18 @@ namespace TestTask.Models {
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Vaccination> Vaccinations { get; set; }
         public DbSet<Vaccine> Vaccines { get; set; }
+        public DbQuery<VaccinationVM> VaccinationVMs { get; set; }
 
         public VaccinationsContext(DbContextOptions options) : base(options) {
 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Vaccination>()
+                 .HasOne(v => v.Patient)
+                 .WithMany(p => p.Vaccinations)
+                 .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Patient>().HasData(
                     new Patient {
                         Id = 1,

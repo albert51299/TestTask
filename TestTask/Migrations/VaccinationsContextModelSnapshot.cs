@@ -105,7 +105,7 @@ namespace TestTask.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("DATE");
 
-                    b.Property<int>("PatientId");
+                    b.Property<int?>("PatientId");
 
                     b.Property<string>("VaccineName")
                         .IsRequired();
@@ -192,7 +192,7 @@ namespace TestTask.Migrations
                     b.HasOne("TestTask.Models.Patient", "Patient")
                         .WithMany("Vaccinations")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 #pragma warning restore 612, 618
         }

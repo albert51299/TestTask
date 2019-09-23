@@ -26,20 +26,13 @@ namespace TestTask {
             services.AddReact();
             services.AddJsEngineSwitcher(options => options.DefaultEngineName = ChakraCoreJsEngine.EngineName).AddChakraCore();
             services.AddDbContext<VaccinationsContext>(o => o.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
-            services.AddScoped<IDataRepository<Vaccination>, VaccinationManager>();
             services.AddScoped<IDataRepository<Patient>, PatientManager>();
+            services.AddScoped<IDataRepository<VaccinationVM>, VaccinationManager>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
-            /*if (env.IsDevelopment()) {
-                app.UseDeveloperExceptionPage();
-            }
-            else {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }*/
             app.UseReact(config => { });
             app.UseDefaultFiles();
             app.UseStaticFiles();

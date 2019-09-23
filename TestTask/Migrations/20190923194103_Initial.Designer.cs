@@ -10,7 +10,7 @@ using TestTask.Models;
 namespace TestTask.Migrations
 {
     [DbContext(typeof(VaccinationsContext))]
-    [Migration("20190922081220_Initial")]
+    [Migration("20190923194103_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace TestTask.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("DATE");
 
-                    b.Property<int>("PatientId");
+                    b.Property<int?>("PatientId");
 
                     b.Property<string>("VaccineName")
                         .IsRequired();
@@ -194,7 +194,7 @@ namespace TestTask.Migrations
                     b.HasOne("TestTask.Models.Patient", "Patient")
                         .WithMany("Vaccinations")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 #pragma warning restore 612, 618
         }
