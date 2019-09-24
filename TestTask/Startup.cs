@@ -28,6 +28,7 @@ namespace TestTask {
             services.AddDbContext<VaccinationsContext>(o => o.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
             services.AddScoped<IDataRepository<Patient>, PatientManager>();
             services.AddScoped<IDataRepository<VaccinationVM>, VaccinationManager>();
+            services.AddScoped<IDataRepository<Vaccine>, VaccineManager>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

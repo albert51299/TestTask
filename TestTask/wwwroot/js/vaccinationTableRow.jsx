@@ -27,7 +27,7 @@ class VaccinationTableRow extends React.Component {
         return(
             <tr>
                 <td className="text-left">{this.state.vaccination.vaccineName}</td>
-                <td>{this.state.vaccination.consent}</td>
+                <td>{this.state.vaccination.consent ? "Да" : "Нет"}</td>
                 <td>{this.state.formattedDate}</td>
                 <td>{this.state.formattedPatient}</td>
                 <td>
