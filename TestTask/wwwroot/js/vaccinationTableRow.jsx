@@ -2,8 +2,15 @@ class VaccinationTableRow extends React.Component {
     constructor(props) {
         super(props);
 
-        var name = props.vaccination.lastName + " " + props.vaccination.firstName.substr(0, 1) + ".";
-        name += props.vaccination.secondName === null ? "" : props.vaccination.secondName.substr(0, 1) + "."; 
+        var name;
+        if (props.vaccination.lastName !== null) {
+            name = props.vaccination.lastName + " " + props.vaccination.firstName.substr(0, 1) + ".";
+            name += props.vaccination.secondName === null ? "" : props.vaccination.secondName.substr(0, 1) + "."; 
+        }
+        else {
+            name = "Удален из базы данных";
+        }
+
         var tempDate = props.vaccination.date.substr(0, 10);
         var date = tempDate.substr(8,2) + "." + tempDate.substr(5,2) + "." + tempDate.substr(0,4);
 
@@ -14,12 +21,12 @@ class VaccinationTableRow extends React.Component {
     }
 
     editHandler() {
-        sessionStorage.setItem("id", this.props.vaccination.id);
+        sessionStorage.setItem("vaccinationId", this.props.vaccination.id);
         window.location.href = "./editVaccinationForm.html";
     }
 
     deleteHandler() {
-        sessionStorage.setItem("id", this.props.vaccination.id);
+        sessionStorage.setItem("vaccinationId", this.props.vaccination.id);
         window.location.href = "./deleteVaccinationForm.html";
     }
 
