@@ -17,8 +17,8 @@ class Content extends React.Component {
     }
 
     componentDidMount() {
-        let url = "api/patient/" + sessionStorage.getItem("id");
-        sessionStorage.removeItem("id");
+        let url = "api/patient/" + sessionStorage.getItem("patientId");
+        sessionStorage.removeItem("patientId");
         fetch(url, {
             method: "GET",
             headers: {

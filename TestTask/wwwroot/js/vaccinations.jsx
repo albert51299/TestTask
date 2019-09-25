@@ -29,7 +29,7 @@ class Content extends React.Component {
     }
 
     updateHandler() {
-        window.location.href = "./vaccinations.html";
+        window.location.href = "/vaccinations.html";
     }
 
     showAllHandler() {
@@ -41,11 +41,11 @@ class Content extends React.Component {
     }
 
     addHandler() {
-        window.location.href = "./addVaccinationForm.html";
+        window.location.href = "/addVaccinationForm.html";
     }
 
     backHandler() {
-        window.location.href = "./index.html";
+        window.location.href = "/index.html";
     }
 
     loadAllVaccinations() {

@@ -1,21 +1,21 @@
 class Content extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { id: "", patientId: "", patientName: "", vaccines: [], vaccineName: "", consent: "false", date: "", 
+        this.state = { vaccines: [], vaccineName: "", consent: "false", date: "", patientId: "", patientName: "",
             emptyVaccineName: false, emptyDate: false };
 
         this.onVaccineNameChanged = this.onVaccineNameChanged.bind(this);
         this.onConsentChanged = this.onConsentChanged.bind(this);
         this.onDateChanged = this.onDateChanged.bind(this);
 
-        this.editHandler = this.editHandler.bind(this);
+        this.addHandler = this.addHandler.bind(this);
         this.cancelHandler = this.cancelHandler.bind(this);
     }
 
     componentDidMount() {
-        let url = "api/vaccination/getvaccination/" + sessionStorage.getItem("vaccinationId");
-        sessionStorage.removeItem("vaccinationId");
-        fetch(url, {
+        let getPatientURL = "api/patient/" + sessionStorage.getItem("patientId");
+        sessionStorage.removeItem("patientId");
+        fetch(getPatientURL, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -24,18 +24,10 @@ class Content extends React.Component {
         })
             .then(response => response.json())
             .then(data => {
-                let formattedName;
-                if (data.lastName !== null) {
-                    formattedName = data.lastName + " " + data.firstName.substr(0, 1) + ".";
-                    formattedName += (data.secondName === null) ? "" : data.secondName.substr(0, 1) + ".";
-                }
-                else {
-                    formattedName = "Удален из базы данных";
-                }
-                
-                let formattedDate = data.date.substr(0, 10);
-                this.setState({ id: data.id, patientId: data.patientId ,vaccineName: data.vaccineName, consent: data.consent, 
-                    date: formattedDate, patientName: formattedName });
+                let formattedName = data.lastName + " " + data.firstName.substr(0, 1) + ".";
+                formattedName += (data.secondName === null) ? "" : data.secondName.substr(0, 1) + ".";
+
+                this.setState({ patientId: data.id, fullName: formattedName });
             });
 
         fetch("api/vaccine", {
@@ -61,14 +53,14 @@ class Content extends React.Component {
         this.setState({ date: e.target.value });
     }
 
-    editHandler() {
+    addHandler() {
         let vaccineName = this.state.vaccineName;
         let consent = this.state.consent;
         let date = this.state.date;
         
         let doRequest = true;
 
-        this.setState({ emptyVaccineName: false, emptyDate: false, });
+        this.setState({ emptyVaccineName: false, emptyDate: false });
 
         if (vaccineName === "") {
             this.setState({ emptyVaccineName: true });
@@ -80,10 +72,10 @@ class Content extends React.Component {
         }
 
         if (doRequest) {
-            let data = JSON.stringify({ "id":this.state.id, "vaccineName":vaccineName, "consent":consent, "date":date });
+            let data = JSON.stringify({ "vaccineName":vaccineName, "consent":consent, "date":date, "patientId":this.state.patientId });
 
             fetch("api/vaccination", {
-                method: "PUT",
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -92,32 +84,19 @@ class Content extends React.Component {
             })
                 .then(response => {
                     if (response.status === 200) {
-                        if (sessionStorage.getItem("fromPatient") === "true") {
-                            sessionStorage.setItem("patientId", this.state.patientId);
-                            window.location.href = "./vaccinationsForPatient.html";
-                        }
-                        else {
-                            window.location.href = "./vaccinations.html";
-                        }
+                        sessionStorage.setItem("patientId", this.state.patientId);
+                        window.location.href = "/vaccinationsForPatient.html";
                     }
                     if (response.status === 400) {
                         alert("Bad request");
-                    }
-                    if (response.status === 404) {
-                        alert("Not found");
                     }
                 });
         }
     }
 
     cancelHandler() {
-        if (sessionStorage.getItem("fromPatient") === "true") {
-            sessionStorage.setItem("patientId", this.state.patientId);
-            window.location.href = "./vaccinationsForPatient.html";
-        }
-        else {
-            window.location.href = "./vaccinations.html";
-        }
+        sessionStorage.setItem("patientId", this.state.patientId);
+        window.location.href = "/vaccinationsForPatient.html";
     }
 
     render() {
@@ -130,6 +109,7 @@ class Content extends React.Component {
                                 <label htmlFor="inputVaccineName" className="col-sm-2 col-form-label">Название</label>
                                 <div className="col-3">
                                     <select className={this.state.emptyVaccineName ? "form-control is-invalid" : "form-control"} id="inputVaccineName" value={this.state.vaccineName} onChange={this.onVaccineNameChanged}>
+                                        <option value="" disabled>Выберите препарат</option>
                                         {
                                             this.state.vaccines.map( function(vaccine) { return <VaccineOption key={vaccine.id} vaccine={vaccine}/> } )
                                         }
@@ -157,10 +137,10 @@ class Content extends React.Component {
                             <div className="form-group row justify-content-center">
                                 <label htmlFor="patient" className="col-sm-2 col-form-label">Пациент</label>
                                 <div className="col-3">
-                                    <input type="text" readOnly className="form-control-plaintext" id="patient" value={this.state.patientName}></input>
+                                    <input type="text" readOnly className="form-control-plaintext" id="patient" value={this.state.fullName}></input>
                                 </div>
                             </div>
-                            <input type="button" value="Изменить" className="btn btn-success mr-1" onClick={this.editHandler}></input>
+                            <input type="button" value="Добавить" className="btn btn-success mr-1" onClick={this.addHandler}></input>
                             <input type="button" value="Отмена" className="btn btn-danger" onClick={this.cancelHandler}></input>
                         </div>
                     </div>
@@ -185,5 +165,5 @@ class VaccineOption extends React.Component {
 
 ReactDOM.render(
     <Content />,
-    document.getElementById("editVaccinationForm")
+    document.getElementById("addVaccinationForPatientForm")
 );

@@ -1,7 +1,7 @@
 class Content extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { id: "", patientName: "", vaccineName: "", consent: "false", date: "" };
+        this.state = { id: "", patientName: "", patientId: "", vaccineName: "", consent: "false", date: "" };
 
         this.deleteHandler = this.deleteHandler.bind(this);
         this.cancelHandler = this.cancelHandler.bind(this);
@@ -29,7 +29,7 @@ class Content extends React.Component {
                 }
 
                 let formattedDate = data.date.substr(0, 10);
-                this.setState({ id:data.id ,vaccineName: data.vaccineName, consent: data.consent, 
+                this.setState({ id: data.id, patientId: data.patientId ,vaccineName: data.vaccineName, consent: data.consent, 
                     date: formattedDate, patientName: formattedName });
             });
     }
@@ -45,7 +45,13 @@ class Content extends React.Component {
             }})
             .then(response => {
                 if (response.status === 200) {
-                    window.location.href = "./vaccinations.html";
+                    if (sessionStorage.getItem("fromPatient") === "true") {
+                        sessionStorage.setItem("patientId", this.state.patientId);
+                        window.location.href = "./vaccinationsForPatient.html";
+                    }
+                    else {
+                        window.location.href = "./vaccinations.html";
+                    }
                 }
                 if (response.status === 404) {
                     alert("Not found");
@@ -54,7 +60,13 @@ class Content extends React.Component {
     }
 
     cancelHandler() {
-        window.location.href = "./vaccinations.html";
+        if (sessionStorage.getItem("fromPatient") === "true") {
+            sessionStorage.setItem("patientId", this.state.patientId);
+            window.location.href = "./vaccinationsForPatient.html";
+        }
+        else {
+            window.location.href = "./vaccinations.html";
+        }
     }
 
     render() {

@@ -8,18 +8,24 @@ class PatientTableRow extends React.Component {
         var date = tempDate.substr(8,2) + "." + tempDate.substr(5,2) + "." + tempDate.substr(0,4);
         this.state = { patient: props.patient, fullName: name, dateOfBirth: date };
 
+        this.vaccinationsHandler = this.vaccinationsHandler.bind(this);
         this.editHandler = this.editHandler.bind(this);
         this.deleteHandler = this.deleteHandler.bind(this);
     }
 
+    vaccinationsHandler() {
+        sessionStorage.setItem("patientId", this.props.patient.id);
+        window.location.href = "/vaccinationsForPatient.html";
+    }
+
     editHandler() {
-        sessionStorage.setItem("id", this.props.patient.id);
-        window.location.href = "./editPatientForm.html";
+        sessionStorage.setItem("patientId", this.props.patient.id);
+        window.location.href = "/editPatientForm.html";
     }
 
     deleteHandler() {
-        sessionStorage.setItem("id", this.props.patient.id);
-        window.location.href = "./deletePatientForm.html";
+        sessionStorage.setItem("patientId", this.props.patient.id);
+        window.location.href = "/deletePatientForm.html";
     }
 
     render() {
@@ -29,7 +35,7 @@ class PatientTableRow extends React.Component {
                 <td>{this.state.dateOfBirth}</td>
                 <td>{this.state.patient.snils}</td>
                 <td>
-                    <input type="button" value="Показать прививки" className="btn btn-primary btn-sm"></input>
+                    <input type="button" value="Показать прививки" className="btn btn-primary btn-sm" onClick={this.vaccinationsHandler}></input>
                 </td>
                 <td>
                     <input type="button" value="Редактировать" className="btn btn-secondary btn-sm" onClick={this.editHandler}></input>
