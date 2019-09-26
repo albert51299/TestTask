@@ -57,7 +57,7 @@ namespace TestTask.Controllers {
                 return NotFound();
             }
 
-            // если СНИЛС был отредактирован, проверить есть ли новый СНИЛС в БД
+            // если был получен новый СНИЛС, проверить используется ли новый СНИЛС другим пациентом
             if (sameIdPatients.First().SNILS != patient.SNILS) {
                 IQueryable<Patient> sameSNILSPatients = repository.GetByCondition(p => p.SNILS == patient.SNILS);
                 if (sameSNILSPatients.Count() != 0) {

@@ -13,6 +13,7 @@ namespace TestTask.Controllers {
             repository = dataRepository;
         }
 
+        // получить препараты
         [HttpGet]
         public IActionResult Get() {
             IQueryable<Vaccine> vaccines = repository.GetAll();

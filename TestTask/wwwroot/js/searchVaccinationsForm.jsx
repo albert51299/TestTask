@@ -1,16 +1,31 @@
-class SearchForm extends React.Component {
+import VaccineOption from "./vaccineOption.jsx";
+
+class SearchVaccinationsForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { firstName: "", secondName: "", lastName: "", SNILS: "", 
-            emptyFieldsState: false, incorrectSNILSState: false };
+        this.state = { firstName: "", secondName: "", lastName: "", vaccineName: "", date: "", vaccines: [], 
+            emptyFieldsState: false };
 
         this.onFirstNameChanged = this.onFirstNameChanged.bind(this);
         this.onSecondNameChanged = this.onSecondNameChanged.bind(this);
         this.onLastNameChanged = this.onLastNameChanged.bind(this);
-        this.onSNILSChanged = this.onSNILSChanged.bind(this);
+        this.onVaccineNameChanged = this.onVaccineNameChanged.bind(this);
+        this.onDateChanged = this.onDateChanged.bind(this);
 
         this.searchHandler = this.searchHandler.bind(this);
         this.cancelHandler = this.cancelHandler.bind(this);
+    }
+
+    componentDidMount() {
+        fetch("api/vaccine", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => this.setState({ vaccines: data }) );
     }
 
     onFirstNameChanged(e) {
@@ -25,57 +40,58 @@ class SearchForm extends React.Component {
         this.setState({ lastName: e.target.value });
     }
 
-    onSNILSChanged(e) {
-        this.setState({ SNILS: e.target.value });
+    onVaccineNameChanged(e) {
+        this.setState({ vaccineName: e.target.value });
+    }
+
+    onDateChanged(e) {
+        this.setState({ date: e.target.value });
     }
 
     searchHandler() {
-        this.setState({ emptyFieldsState: false, incorrectSNILSState: false });
+        this.setState({ emptyFieldsState: false });
 
         let searchResult = [];
 
         let fName = this.state.firstName;
         let sName = this.state.secondName;
         let lName = this.state.lastName;
-        let snils = this.state.SNILS;
+        let vaccineName = this.state.vaccineName;
+        let date = this.state.date;
 
-        if ((fName === "") && (sName === "") && (lName === "") && (snils === "")) {
+        if ((fName === "") && (sName === "") && (lName === "") && (vaccineName === "") && (date === "")) {
             this.setState({ emptyFieldsState: true });
             return;
         }
 
-        if (snils !== "") {
-            if (!this.props.correctSNILS(snils)) {
-                this.setState({ incorrectSNILSState: true });
-                return;
-            }
-            snils = this.props.getFormattedSNILS(snils);
-        }
+        // не включать в выборку, если прививка не соответсвует всем указанным условиям
+        for (let vaccination of this.props.allVaccinations) {
+            searchResult.push(vaccination);
 
-        // не включать в выборку, если пациент не соответсвует всем указанным условиям
-        for (let patient of this.props.allPatients) {
-            searchResult.push(patient);
-
-            if ((fName !== patient.firstName) && (fName !== "")) {
+            if ((fName !== vaccination.firstName) && (fName !== "")) {
                 searchResult.pop();
                 continue;
             }
-            if ((sName !== patient.secondName) && (sName !== "")) {
+            if ((sName !== vaccination.secondName) && (sName !== "")) {
                 searchResult.pop();
                 continue;
             }
-            if ((lName !== patient.lastName) && (lName !== "")) {
+            if ((lName !== vaccination.lastName) && (lName !== "")) {
                 searchResult.pop();
                 continue;
             }
-            if ((snils !== patient.snils) && (snils !== "")) {
+            if ((vaccineName !== vaccination.vaccineName) && (vaccineName !== "")) {
+                searchResult.pop();
+                continue;
+            }
+            if ((date !== vaccination.date.substr(0, 10)) && (date !== "")) {
                 searchResult.pop();
                 continue;
             }
         }
-        this.props.changeDisplayedPatients(searchResult);
+        this.props.changeDisplayedVaccinations(searchResult);
         this.props.changeSearchState(false);
-        this.props.changeShowAllPatientsState(false);
+        this.props.changeShowAllVaccinationsState(false);
     }
 
     cancelHandler() {
@@ -107,15 +123,22 @@ class SearchForm extends React.Component {
                     </div>
                 </div>
                 <div className="form-group row justify-content-center">
-                    <label htmlFor="inputSNILS" className="col-sm-2 col-form-label font-weight-bold">СНИЛС</label>
+                    <label htmlFor="inputVaccineName" className="col-sm-2 col-form-label font-weight-bold">Препарат</label>
                     <div className="col-3">
-                        <input type="text" className="form-control" id="inputSNILS" placeholder="XXX-XXX-XXX YY"
-                            value={this.state.SNILS} onChange={this.onSNILSChanged}></input>
-                        <small className="form-text text-muted float-left">Символы '-' и ' ' можно пропустить</small>
+                        <select className="form-control" id="inputVaccineName" value={this.state.vaccineName} onChange={this.onVaccineNameChanged}>
+                            <option value="" disabled>Выберите препарат</option>
+                            {
+                                this.state.vaccines.map( function(vaccine) { return <VaccineOption key={vaccine.id} vaccine={vaccine}/> } )
+                            }
+                        </select>
                     </div>
                 </div>
-                <div className={this.state.incorrectSNILSState ? "alert alert-danger" : "d-none"}>
-                    Неверно введен номер СНИЛС
+                <div className="form-group row justify-content-center">
+                    <label htmlFor="inputDate" className="col-sm-2 col-form-label font-weight-bold">Дата проведения</label>
+                    <div className="col-3">
+                        <input type="date" className="form-control" id="inputDate" placeholder="дд.мм.гггг"
+                            value={this.state.date} onChange={this.onDateChanged}></input>
+                    </div>
                 </div>
                 <div className="form-group row justify-content-center">
                     <div className={this.state.emptyFieldsState ? "col-5 alert alert-danger" : "d-none"}>
@@ -129,4 +152,4 @@ class SearchForm extends React.Component {
     }
 }
 
-export default SearchForm;
+export default SearchVaccinationsForm;

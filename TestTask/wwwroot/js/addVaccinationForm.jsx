@@ -1,3 +1,5 @@
+import VaccineOption from "./vaccineOption.jsx";
+
 class Content extends React.Component {
     constructor(props) {
         super(props);
@@ -61,6 +63,7 @@ class Content extends React.Component {
 
         this.setState({ emptyVaccineName: false, emptyDate: false, emptyPatientId: false, incorrectDate: false });
 
+        // валидация
         if (vaccineName === "") {
             this.setState({ emptyVaccineName: true });
             doRequest = false;
@@ -149,7 +152,6 @@ class Content extends React.Component {
                                     <div className={this.state.incorrectDate ? "invalid-feedback text-left" : "d-none"}>Неверно введена дата</div>
                                 </div>
                             </div>
-
                             <div className="form-group row justify-content-center">
                                 <label htmlFor="inputPatientId" className="col-sm-2 col-form-label font-weight-bold">*Пациент</label>
                                 <div className="col-3">
@@ -162,26 +164,12 @@ class Content extends React.Component {
                                     <div className={this.state.emptyVaccineName ? "invalid-feedback text-left" : "d-none"}>Обязательное поле</div>
                                 </div>
                             </div>
-
                             <input type="button" value="Добавить" className="btn btn-success mr-1" onClick={this.addHandler}></input>
                             <input type="button" value="Отмена" className="btn btn-danger" onClick={this.cancelHandler}></input>
                         </div>
                     </div>
                 </div>
             </div>
-        );
-    }
-}
-
-class VaccineOption extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { data: props.vaccine }
-    }
-
-    render() {
-        return (
-            <option>{this.state.data.name}</option>
         );
     }
 }

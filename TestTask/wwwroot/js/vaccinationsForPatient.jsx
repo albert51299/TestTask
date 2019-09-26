@@ -91,7 +91,7 @@ class Content extends React.Component {
                                 <input type="button" value="Обновить" className="btn btn-primary btn-lg float-right ml-1" onClick={this.updateHandler}></input>
                             </div>
                             <div className="clearfix"></div>
-                            <table className="table">
+                            <table className="table mt-1">
                                 <thead>
                                     <tr>
                                         <th scope="col">Препарат</th>

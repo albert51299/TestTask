@@ -1,3 +1,5 @@
+import VaccineOption from "./vaccineOption.jsx";
+
 class Content extends React.Component {
     constructor(props) {
         super(props);
@@ -69,6 +71,7 @@ class Content extends React.Component {
 
         this.setState({ emptyVaccineName: false, emptyDate: false, incorrectDate: false });
 
+        // валидация
         if (vaccineName === "") {
             this.setState({ emptyVaccineName: true });
             doRequest = false;
@@ -177,19 +180,6 @@ class Content extends React.Component {
                     </div>
                 </div>
             </div>
-        );
-    }
-}
-
-class VaccineOption extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { data: props.vaccine }
-    }
-
-    render() {
-        return (
-            <option>{this.state.data.name}</option>
         );
     }
 }

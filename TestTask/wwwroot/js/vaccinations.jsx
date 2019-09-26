@@ -1,8 +1,11 @@
 ﻿import VaccinationTableRow from "./vaccinationTableRow.jsx";
+import SearchVaccinationsForm from "./SearchVaccinationsForm.jsx";
 
 class Content extends React.Component {
     constructor(props) {
         super(props);
+        // allVaccinations - все загруженные прививки
+        // displayedVaccinations - отображаемые прививки (используется для поиска)
         this.state = { allVaccinations: [], displayedVaccinations: [], loadState: true, searchState: false, showAllVaccinationsState: true };
     
         this.changeSearchState = this.changeSearchState.bind(this);
@@ -79,7 +82,7 @@ class Content extends React.Component {
                                 <input type="button" value="Добавить" className="btn btn-primary btn-lg float-left ml-1" onClick={this.addHandler}></input>
                             </div>
                             <div className="clearfix"></div>
-                            <table className={ !this.state.searchState ? "table" : "d-none" }>
+                            <table className={ !this.state.searchState ? "table mt-1" : "d-none" }>
                                 <thead>
                                     <tr>
                                         <th scope="col">Препарат</th>
@@ -105,7 +108,7 @@ class Content extends React.Component {
                                 Прививки не найдены
                             </div>
                             {
-                                this.state.searchState ? <SearchForm allVaccinations={this.state.allVaccinations} changeDisplayedVaccinations={this.changeDisplayedVaccinations} 
+                                this.state.searchState ? <SearchVaccinationsForm allVaccinations={this.state.allVaccinations} changeDisplayedVaccinations={this.changeDisplayedVaccinations} 
                                     changeSearchState={this.changeSearchState} changeShowAllVaccinationsState={this.changeShowAllVaccinationsState}/> : null
                             }
                         </div>

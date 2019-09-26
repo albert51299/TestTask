@@ -10,7 +10,7 @@ using TestTask.Models;
 namespace TestTask.Migrations
 {
     [DbContext(typeof(VaccinationsContext))]
-    [Migration("20190926081508_Initial")]
+    [Migration("20190926123856_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

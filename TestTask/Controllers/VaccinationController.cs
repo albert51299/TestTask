@@ -19,6 +19,7 @@ namespace TestTask.Controllers {
             return Ok(vaccinations);
         }
 
+        // получить все вакцины пациента
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccinations")]
@@ -27,6 +28,7 @@ namespace TestTask.Controllers {
             return Ok(vaccinations);
         }
 
+        // получить вакцину
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccination")]

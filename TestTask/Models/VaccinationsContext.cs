@@ -4,14 +4,15 @@ namespace TestTask.Models {
     public class VaccinationsContext : DbContext {
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Vaccination> Vaccinations { get; set; }
-        public DbSet<Vaccine> Vaccines { get; set; }
-        public DbQuery<VaccinationVM> VaccinationVMs { get; set; }
+        public DbSet<Vaccine> Vaccines { get; set; } // для хранения прививки в БД
+        public DbQuery<VaccinationVM> VaccinationVMs { get; set; } // для контроллера
 
         public VaccinationsContext(DbContextOptions options) : base(options) {
 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            // не удалять вакцину после удаления связанного с ней пациента
             modelBuilder.Entity<Vaccination>()
                  .HasOne(v => v.Patient)
                  .WithMany(p => p.Vaccinations)

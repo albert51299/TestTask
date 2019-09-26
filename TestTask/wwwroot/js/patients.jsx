@@ -4,6 +4,8 @@ import SearchForm from "./searchForm.jsx";
 class Content extends React.Component {
     constructor(props) {
         super(props);
+        // allPatients - все загруженные пациенты
+        // displayedPatients - отображаемые пациенты (используется для поиска)
         this.state = { allPatients: [], displayedPatients: [], loadState: true, searchState: false, showAllPatientsState: true };
 
         this.changeSearchState = this.changeSearchState.bind(this);
@@ -69,29 +71,44 @@ class Content extends React.Component {
     }
 
     correctSNILS(snils) {
+        // удаление '-' и ' ' из строки
         let onlyNumbersSNILS = snils.split(new RegExp("[- ]", "g")).join("");
 
         if ((onlyNumbersSNILS.length !== 11) || (isNaN(onlyNumbersSNILS))) {
             return false;
         }
 
-        // 001 001 998
+        // если снилс меньше 001 001 998
         if (parseInt(onlyNumbersSNILS.substr(0, 9)) <= 1001998) {
             return false;
         }
 
+        // вычисление контрольной суммы
         let arrSNILS = onlyNumbersSNILS.split("");
         let checksum = 0;
         for (let i = 0; i < 9; i++) {
             checksum += arrSNILS[i] * (9 - i);
         }
 
+        // проверка контрольной суммы
         let enteredChecksum = parseInt(onlyNumbersSNILS.substr(9, 2));
-        if (checksum !== enteredChecksum) {
+        if ((checksum < 100) && (checksum !== enteredChecksum)) {
+            return false;
+        }
+        if (((checksum === 100) || (checksum === 101)) && (enteredChecksum !== 0)) {
+            return false;
+        }
+        if ((checksum > 101) && ((checksum % 101) !== enteredChecksum)) {
             return false;
         }
 
+        // если все проверки пройдены
         return true;
+    }
+
+    getFormattedSNILS(snils) {
+        let onlyNumbersSNILS = snils.split(new RegExp("[- ]", "g")).join("");
+        return onlyNumbersSNILS.substr(0, 3) + "-" + onlyNumbersSNILS.substr(3, 3) + "-" + onlyNumbersSNILS.substr(6, 3) + " " + onlyNumbersSNILS.substr(9, 2);
     }
 
     render() {
@@ -108,7 +125,7 @@ class Content extends React.Component {
                                 <input type="button" value="Добавить" className="btn btn-primary btn-lg float-left ml-1" onClick={this.addHandler}></input>
                             </div>
                             <div className="clearfix"></div>
-                            <table className={ !this.state.searchState ? "table" : "d-none" }>
+                            <table className={ !this.state.searchState ? "table mt-1" : "d-none" }>
                                 <thead>
                                     <tr>
                                         <th scope="col">ФИО</th>
@@ -134,7 +151,7 @@ class Content extends React.Component {
                                 Пациенты не найдены
                             </div>
                             {
-                                this.state.searchState ? <SearchForm allPatients={this.state.allPatients} changeDisplayedPatients={this.changeDisplayedPatients} 
+                                this.state.searchState ? <SearchForm allPatients={this.state.allPatients} changeDisplayedPatients={this.changeDisplayedPatients} getFormattedSNILS={this.getFormattedSNILS}
                                     changeSearchState={this.changeSearchState} correctSNILS={this.correctSNILS} changeShowAllPatientsState={this.changeShowAllPatientsState}/> : null
                             }
                         </div>

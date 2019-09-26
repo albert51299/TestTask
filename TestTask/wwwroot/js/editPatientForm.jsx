@@ -69,7 +69,8 @@ class Content extends React.Component {
 
         this.setState({ emptyFName: false, emptyLName: false, emptyDate: false, emptyGender: false, incorrectSNILS: false,
             snilsExist: false, incorrectDate: false });
-
+        
+        // валидация
         if (fName === "") {
             this.setState({ emptyFName: true });
             doRequest = false;
