@@ -22,11 +22,13 @@ class VaccinationTableRow extends React.Component {
 
     editHandler() {
         sessionStorage.setItem("vaccinationId", this.props.vaccination.id);
+        sessionStorage.setItem("fromPatient", "false");
         window.location.href = "/editVaccinationForm.html";
     }
 
     deleteHandler() {
         sessionStorage.setItem("vaccinationId", this.props.vaccination.id);
+        sessionStorage.setItem("fromPatient", "false");
         window.location.href = "/deleteVaccinationForm.html";
     }
 

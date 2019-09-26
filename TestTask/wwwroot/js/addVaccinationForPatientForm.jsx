@@ -2,7 +2,7 @@ class Content extends React.Component {
     constructor(props) {
         super(props);
         this.state = { vaccines: [], vaccineName: "", consent: "false", date: "", patientId: "", patientName: "",
-            emptyVaccineName: false, emptyDate: false };
+            emptyVaccineName: false, emptyDate: false, incorrectDate: false };
 
         this.onVaccineNameChanged = this.onVaccineNameChanged.bind(this);
         this.onConsentChanged = this.onConsentChanged.bind(this);
@@ -14,7 +14,6 @@ class Content extends React.Component {
 
     componentDidMount() {
         let getPatientURL = "api/patient/" + sessionStorage.getItem("patientId");
-        sessionStorage.removeItem("patientId");
         fetch(getPatientURL, {
             method: "GET",
             headers: {
@@ -60,7 +59,7 @@ class Content extends React.Component {
         
         let doRequest = true;
 
-        this.setState({ emptyVaccineName: false, emptyDate: false });
+        this.setState({ emptyVaccineName: false, emptyDate: false, incorrectDate: false });
 
         if (vaccineName === "") {
             this.setState({ emptyVaccineName: true });
@@ -68,6 +67,10 @@ class Content extends React.Component {
         }
         if (date === "") {
             this.setState({ emptyDate: true });
+            doRequest = false;
+        }
+        if (!this.correctDate(date)) {
+            this.setState({ incorrectDate: true });
             doRequest = false;
         }
 
@@ -84,7 +87,6 @@ class Content extends React.Component {
             })
                 .then(response => {
                     if (response.status === 200) {
-                        sessionStorage.setItem("patientId", this.state.patientId);
                         window.location.href = "/vaccinationsForPatient.html";
                     }
                     if (response.status === 400) {
@@ -95,8 +97,16 @@ class Content extends React.Component {
     }
 
     cancelHandler() {
-        sessionStorage.setItem("patientId", this.state.patientId);
         window.location.href = "/vaccinationsForPatient.html";
+    }
+
+    correctDate(date) {
+        let year = parseInt(date.substr(0, 4));
+        let currentYear = new Date().getFullYear();
+        if ((year < 2010) || (year > (currentYear + 1))) {
+            return false;
+        }
+        return true;
     }
 
     render() {
@@ -106,7 +116,7 @@ class Content extends React.Component {
                     <div className="col text-center">
                         <div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="inputVaccineName" className="col-sm-2 col-form-label">Название</label>
+                                <label htmlFor="inputVaccineName" className="col-sm-2 col-form-label font-weight-bold">*Препарат</label>
                                 <div className="col-3">
                                     <select className={this.state.emptyVaccineName ? "form-control is-invalid" : "form-control"} id="inputVaccineName" value={this.state.vaccineName} onChange={this.onVaccineNameChanged}>
                                         <option value="" disabled>Выберите препарат</option>
@@ -118,7 +128,7 @@ class Content extends React.Component {
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="inputConsent" className="col-sm-2 col-form-label">Наличие согласия</label>
+                                <label htmlFor="inputConsent" className="col-sm-2 col-form-label font-weight-bold">Наличие согласия</label>
                                 <div className="col-3">
                                     <select className="form-control" id="inputConsent" value={this.state.consent} onChange={this.onConsentChanged}>
                                         <option value="false">Нет</option>
@@ -127,15 +137,16 @@ class Content extends React.Component {
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="inputDate" className="col-sm-2 col-form-label">Дата проведения</label>
+                                <label htmlFor="inputDate" className="col-sm-2 col-form-label font-weight-bold">*Дата проведения</label>
                                 <div className="col-3">
-                                    <input type="date" className={this.state.emptyDate ? "form-control is-invalid" : "form-control"} id="inputDate" placeholder="дд.мм.гггг"
+                                    <input type="date" className={this.state.emptyDate || this.state.incorrectDate ? "form-control is-invalid" : "form-control"} id="inputDate" placeholder="дд.мм.гггг"
                                         value={this.state.date} onChange={this.onDateChanged}></input>
                                     <div className={this.state.emptyDate ? "invalid-feedback text-left" : "d-none"}>Обязательное поле</div>
+                                    <div className={this.state.incorrectDate ? "invalid-feedback text-left" : "d-none"}>Неверно введена дата</div>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="patient" className="col-sm-2 col-form-label">Пациент</label>
+                                <label htmlFor="patient" className="col-sm-2 col-form-label font-weight-bold">Пациент</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="patient" value={this.state.fullName}></input>
                                 </div>

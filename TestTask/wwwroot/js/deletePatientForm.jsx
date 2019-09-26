@@ -9,7 +9,6 @@ class Content extends React.Component {
 
     componentDidMount() {
         let url = "api/patient/" + sessionStorage.getItem("patientId");
-        sessionStorage.removeItem("patientId");
         fetch(url, {
             method: "GET",
             headers: {
@@ -53,37 +52,37 @@ class Content extends React.Component {
                     <div className="col text-center">
                         <div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="lName" className="col-sm-2 col-form-label">Фамилия</label>
+                                <label htmlFor="lName" className="col-sm-2 col-form-label font-weight-bold">Фамилия</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="lName" value={this.state.lastName}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="fName" className="col-sm-2 col-form-label">Имя</label>
+                                <label htmlFor="fName" className="col-sm-2 col-form-label font-weight-bold">Имя</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="fName" value={this.state.firstName}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="sName" className="col-sm-2 col-form-label">Отчество</label>
+                                <label htmlFor="sName" className="col-sm-2 col-form-label font-weight-bold">Отчество</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="sName" value={this.state.secondName}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="date" className="col-sm-2 col-form-label">Дата рождения</label>
+                                <label htmlFor="date" className="col-sm-2 col-form-label font-weight-bold">Дата рождения</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="date" value={this.state.dateOfBirth}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="gender" className="col-sm-2 col-form-label">Пол</label>
+                                <label htmlFor="gender" className="col-sm-2 col-form-label font-weight-bold">Пол</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="gender" value={this.state.gender}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="snils" className="col-sm-2 col-form-label">СНИЛС</label>
+                                <label htmlFor="snils" className="col-sm-2 col-form-label font-weight-bold">СНИЛС</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="snils" value={this.state.SNILS}></input>
                                 </div>

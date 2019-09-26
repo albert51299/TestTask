@@ -2,7 +2,7 @@ class Content extends React.Component {
     constructor(props) {
         super(props);
         this.state = { patients: [], vaccines: [], vaccineName: "", consent: "false", date: "", patientId: "", 
-            emptyVaccineName: false, emptyDate: false, emptyPatientId: false };
+            emptyVaccineName: false, emptyDate: false, emptyPatientId: false, incorrectDate: false };
 
         this.onVaccineNameChanged = this.onVaccineNameChanged.bind(this);
         this.onConsentChanged = this.onConsentChanged.bind(this);
@@ -59,7 +59,7 @@ class Content extends React.Component {
         
         let doRequest = true;
 
-        this.setState({ emptyVaccineName: false, emptyDate: false, emptyPatientId: false });
+        this.setState({ emptyVaccineName: false, emptyDate: false, emptyPatientId: false, incorrectDate: false });
 
         if (vaccineName === "") {
             this.setState({ emptyVaccineName: true });
@@ -67,6 +67,10 @@ class Content extends React.Component {
         }
         if (date === "") {
             this.setState({ emptyDate: true });
+            doRequest = false;
+        }
+        if (!this.correctDate(date)) {
+            this.setState({ incorrectDate: true });
             doRequest = false;
         }
         if (patientId === "") {
@@ -100,6 +104,15 @@ class Content extends React.Component {
         window.location.href = "./vaccinations.html";
     }
 
+    correctDate(date) {
+        let year = parseInt(date.substr(0, 4));
+        let currentYear = new Date().getFullYear();
+        if ((year < 2010) || (year > (currentYear + 1))) {
+            return false;
+        }
+        return true;
+    }
+
     render() {
         return(
             <div className="container min-vh-100">
@@ -107,7 +120,7 @@ class Content extends React.Component {
                     <div className="col text-center">
                         <div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="inputVaccineName" className="col-sm-2 col-form-label">Название</label>
+                                <label htmlFor="inputVaccineName" className="col-sm-2 col-form-label font-weight-bold">*Препарат</label>
                                 <div className="col-3">
                                     <select className={this.state.emptyVaccineName ? "form-control is-invalid" : "form-control"} id="inputVaccineName" value={this.state.vaccineName} onChange={this.onVaccineNameChanged}>
                                         <option value="" disabled>Выберите препарат</option>
@@ -119,7 +132,7 @@ class Content extends React.Component {
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="inputConsent" className="col-sm-2 col-form-label">Наличие согласия</label>
+                                <label htmlFor="inputConsent" className="col-sm-2 col-form-label font-weight-bold">Наличие согласия</label>
                                 <div className="col-3">
                                     <select className="form-control" id="inputConsent" value={this.state.consent} onChange={this.onConsentChanged}>
                                         <option value="false">Нет</option>
@@ -128,16 +141,17 @@ class Content extends React.Component {
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="inputDate" className="col-sm-2 col-form-label">Дата проведения</label>
+                                <label htmlFor="inputDate" className="col-sm-2 col-form-label font-weight-bold">*Дата проведения</label>
                                 <div className="col-3">
-                                    <input type="date" className={this.state.emptyDate ? "form-control is-invalid" : "form-control"} id="inputDate" placeholder="дд.мм.гггг"
+                                    <input type="date" className={this.state.emptyDate || this.state.incorrectDate ? "form-control is-invalid" : "form-control"} id="inputDate" placeholder="дд.мм.гггг"
                                         value={this.state.date} onChange={this.onDateChanged}></input>
                                     <div className={this.state.emptyDate ? "invalid-feedback text-left" : "d-none"}>Обязательное поле</div>
+                                    <div className={this.state.incorrectDate ? "invalid-feedback text-left" : "d-none"}>Неверно введена дата</div>
                                 </div>
                             </div>
 
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="inputPatientId" className="col-sm-2 col-form-label">Пациент</label>
+                                <label htmlFor="inputPatientId" className="col-sm-2 col-form-label font-weight-bold">*Пациент</label>
                                 <div className="col-3">
                                     <select className={this.state.emptyPatientId ? "form-control is-invalid" : "form-control"} id="inputPatientId" value={this.state.patientId} onChange={this.onPatientIdChanged}>
                                         <option value="" disabled>Выберите пациента</option>

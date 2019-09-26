@@ -52,7 +52,7 @@ namespace TestTask.Migrations
                             Id = 1,
                             DateOfBirth = new DateTime(1980, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Иван",
-                            Gender = "м",
+                            Gender = "муж",
                             LastName = "Васильев",
                             SNILS = "112-233-445 95"
                         },
@@ -61,7 +61,7 @@ namespace TestTask.Migrations
                             Id = 2,
                             DateOfBirth = new DateTime(1990, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Василий",
-                            Gender = "м",
+                            Gender = "муж",
                             LastName = "Иванов",
                             SNILS = "112-233-446 96"
                         },
@@ -70,7 +70,7 @@ namespace TestTask.Migrations
                             Id = 3,
                             DateOfBirth = new DateTime(1995, 7, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Алексей",
-                            Gender = "м",
+                            Gender = "муж",
                             LastName = "Смирнов",
                             SNILS = "112-233-436 94"
                         },
@@ -79,7 +79,7 @@ namespace TestTask.Migrations
                             Id = 4,
                             DateOfBirth = new DateTime(1965, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Петр",
-                            Gender = "м",
+                            Gender = "муж",
                             LastName = "Иванов",
                             SNILS = "111-233-446 89"
                         },
@@ -88,7 +88,7 @@ namespace TestTask.Migrations
                             Id = 5,
                             DateOfBirth = new DateTime(1985, 11, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Валентина",
-                            Gender = "ж",
+                            Gender = "жен",
                             LastName = "Иванова",
                             SNILS = "111-133-446 83"
                         });

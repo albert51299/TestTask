@@ -36,6 +36,12 @@ namespace TestTask.Controllers {
                 return BadRequest();
             }
 
+            IQueryable<Patient> patients = repository.GetByCondition(p => p.SNILS == patient.SNILS);
+            if (patients.Count() != 0) {
+                // пациент с таким СНИЛС уже есть
+                return Conflict();
+            }
+            
             repository.Add(patient);
             return Ok();
         }
@@ -46,9 +52,17 @@ namespace TestTask.Controllers {
                 return BadRequest();
             }
 
-            IQueryable<Patient> patients = repository.GetByCondition(p => p.Id == patient.Id);
-            if (patients.Count() == 0) {
+            IQueryable<Patient> sameIdPatients = repository.GetByCondition(p => p.Id == patient.Id);
+            if (sameIdPatients.Count() == 0) {
                 return NotFound();
+            }
+
+            // если СНИЛС был отредактирован, проверить есть ли новый СНИЛС в БД
+            if (sameIdPatients.First().SNILS != patient.SNILS) {
+                IQueryable<Patient> sameSNILSPatients = repository.GetByCondition(p => p.SNILS == patient.SNILS);
+                if (sameSNILSPatients.Count() != 0) {
+                    return Conflict();
+                }
             }
 
             repository.Update(patient);

@@ -9,7 +9,6 @@ class Content extends React.Component {
 
     componentDidMount() {
         let url = "api/vaccination/getvaccination/" + sessionStorage.getItem("vaccinationId");
-        sessionStorage.removeItem("vaccinationId");
         fetch(url, {
             method: "GET",
             headers: {
@@ -28,7 +27,8 @@ class Content extends React.Component {
                     formattedName = "Удален из базы данных";
                 }
 
-                let formattedDate = data.date.substr(0, 10);
+                var tempDate = data.date.substr(0, 10);
+                var formattedDate = tempDate.substr(8,2) + "." + tempDate.substr(5,2) + "." + tempDate.substr(0,4);
                 this.setState({ id: data.id, patientId: data.patientId ,vaccineName: data.vaccineName, consent: data.consent, 
                     date: formattedDate, patientName: formattedName });
             });
@@ -36,7 +36,6 @@ class Content extends React.Component {
 
     deleteHandler() {
         let url = "api/vaccination/" + sessionStorage.getItem("vaccinationId");
-        sessionStorage.removeItem("vaccinationId");
         fetch("api/vaccination/" + this.state.id, {
             method: "DELETE",
             headers: {
@@ -46,7 +45,6 @@ class Content extends React.Component {
             .then(response => {
                 if (response.status === 200) {
                     if (sessionStorage.getItem("fromPatient") === "true") {
-                        sessionStorage.setItem("patientId", this.state.patientId);
                         window.location.href = "./vaccinationsForPatient.html";
                     }
                     else {
@@ -61,7 +59,6 @@ class Content extends React.Component {
 
     cancelHandler() {
         if (sessionStorage.getItem("fromPatient") === "true") {
-            sessionStorage.setItem("patientId", this.state.patientId);
             window.location.href = "./vaccinationsForPatient.html";
         }
         else {
@@ -76,25 +73,25 @@ class Content extends React.Component {
                     <div className="col text-center">
                         <div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="vaccine" className="col-sm-2 col-form-label">Препарат</label>
+                                <label htmlFor="vaccine" className="col-sm-2 col-form-label font-weight-bold">Препарат</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="vaccine" value={this.state.vaccineName}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="consent" className="col-sm-2 col-form-label">Согласие</label>
+                                <label htmlFor="consent" className="col-sm-2 col-form-label font-weight-bold">Согласие</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="consent" value={this.state.consent ? "Да" : "Нет"}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="date" className="col-sm-2 col-form-label">Дата проведения</label>
+                                <label htmlFor="date" className="col-sm-2 col-form-label font-weight-bold">Дата проведения</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="date" value={this.state.date}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="patient" className="col-sm-2 col-form-label">Пациент</label>
+                                <label htmlFor="patient" className="col-sm-2 col-form-label font-weight-bold">Пациент</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="patient" value={this.state.patientName}></input>
                                 </div>

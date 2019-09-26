@@ -16,12 +16,10 @@ class Content extends React.Component {
     }
 
     updateHandler() {
-        sessionStorage.setItem("patientId", this.state.id);
         window.location.href = "/vaccinationsForPatient.html";
     }
 
     addHandler() {
-        sessionStorage.setItem("patientId", this.state.id);
         window.location.href = "/addVaccinationForPatientForm.html";
     }
 
@@ -55,8 +53,6 @@ class Content extends React.Component {
         })
             .then(response => response.json())
             .then(data => { this.setState({ vaccinations: data, loadState: false }); });
-
-        sessionStorage.removeItem("patientId");
     }
 
     render() {
@@ -66,25 +62,25 @@ class Content extends React.Component {
                     <div className="col text-center">
                        <div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="fullName" className="col-sm-2 col-form-label">ФИО</label>
+                                <label htmlFor="fullName" className="col-sm-2 col-form-label font-weight-bold">ФИО</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="fullName" value={this.state.fullName}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="dateOfBirth" className="col-sm-2 col-form-label">Дата рождения</label>
+                                <label htmlFor="dateOfBirth" className="col-sm-2 col-form-label font-weight-bold">Дата рождения</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="dateOfBirth" value={this.state.dateOfBirth}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="gender" className="col-sm-2 col-form-label">Пол</label>
+                                <label htmlFor="gender" className="col-sm-2 col-form-label font-weight-bold">Пол</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="gender" value={this.state.gender}></input>
                                 </div>
                             </div>
                             <div className="form-group row justify-content-center">
-                                <label htmlFor="snils" className="col-sm-2 col-form-label">СНИЛС</label>
+                                <label htmlFor="snils" className="col-sm-2 col-form-label font-weight-bold">СНИЛС</label>
                                 <div className="col-3">
                                     <input type="text" readOnly className="form-control-plaintext" id="snils" value={this.state.SNILS}></input>
                                 </div>
@@ -98,7 +94,7 @@ class Content extends React.Component {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Название</th>
+                                        <th scope="col">Препарат</th>
                                         <th scope="col">Согласие</th>
                                         <th scope="col">Дата</th>
                                         <th scope="col"></th>

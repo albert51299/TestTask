@@ -82,7 +82,7 @@ class Content extends React.Component {
                             <table className={ !this.state.searchState ? "table" : "d-none" }>
                                 <thead>
                                     <tr>
-                                        <th scope="col">Название</th>
+                                        <th scope="col">Препарат</th>
                                         <th scope="col">Согласие</th>
                                         <th scope="col">Дата</th>
                                         <th scope="col">Пациент</th>

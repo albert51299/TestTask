@@ -86,28 +86,28 @@ class SearchForm extends React.Component {
         return(
             <div>
                 <div className="form-group row">
-                    <label htmlFor="inputLastName" className="col-sm-2 col-form-label">Фамилия</label>
+                    <label htmlFor="inputLastName" className="col-sm-2 col-form-label font-weight-bold">Фамилия</label>
                     <div className="col-sm-10">
                         <input type="text" className="form-control" id="inputLastName" placeholder="Фамилия"
                             value={this.state.lastName} onChange={this.onLastNameChanged}></input>
                     </div>
                 </div>
                 <div className="form-group row">
-                    <label htmlFor="inputFirstName" className="col-sm-2 col-form-label">Имя</label>
+                    <label htmlFor="inputFirstName" className="col-sm-2 col-form-label font-weight-bold">Имя</label>
                     <div className="col-sm-10">
                         <input type="text" className="form-control" id="inputFirstName" placeholder="Имя"
                             value={this.state.firstName} onChange={this.onFirstNameChanged}></input>
                     </div>
                 </div>
                 <div className="form-group row">
-                    <label htmlFor="inputSecondName" className="col-sm-2 col-form-label">Отчество</label>
+                    <label htmlFor="inputSecondName" className="col-sm-2 col-form-label font-weight-bold">Отчество</label>
                     <div className="col-sm-10">
                         <input type="text" className="form-control" id="inputSecondName" placeholder="Отчество"
                             value={this.state.secondName} onChange={this.onSecondNameChanged}></input>
                     </div>
                 </div>
                 <div className="form-group row">
-                    <label htmlFor="inputSNILS" className="col-sm-2 col-form-label">СНИЛС</label>
+                    <label htmlFor="inputSNILS" className="col-sm-2 col-form-label font-weight-bold">СНИЛС</label>
                     <div className="col-sm-10">
                         <input type="text" className="form-control" id="inputSNILS" placeholder="XXX-XXX-XXX YY"
                             value={this.state.SNILS} onChange={this.onSNILSChanged}></input>
