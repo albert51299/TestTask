@@ -110,7 +110,7 @@ class Content extends React.Component {
     correctDate(date) {
         let year = parseInt(date.substr(0, 4));
         let currentYear = new Date().getFullYear();
-        if ((year < 2010) || (year > (currentYear + 1))) {
+        if ((year < 1850) || (year > (currentYear + 1))) {
             return false;
         }
         return true;
