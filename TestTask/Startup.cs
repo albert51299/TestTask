@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using React.AspNet;
+using Serilog;
+using Serilog.Events;
+using System.Reflection;
 using TestTask.Models;
 using TestTask.Models.DataManager;
 using TestTask.Models.Repository;
@@ -33,12 +36,30 @@ namespace TestTask {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+        public void Configure(IApplicationBuilder app,IApplicationLifetime lifetime, IHostingEnvironment env) {
             app.UseReact(config => { });
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+            var logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .Enrich.WithProperty("AppName", Assembly.GetExecutingAssembly().GetName().Name)
+                .Enrich.WithProperty("AppVersion", Assembly.GetExecutingAssembly().GetName().Version)
+                .CreateLogger();
+            Log.Logger = logger;
+
+            lifetime.ApplicationStarted.Register(() => Log.Write(LogEventLevel.Information, "Application started"));
+            // не срабатывает при остановке приложения в visual studio
+            lifetime.ApplicationStopped.Register(() => Log.Write(LogEventLevel.Information,  "Application stopped"));
+
+            // при такой остановке срабатывает (вызов graceful shutdown)
+            //lifetime.StopApplication();
         }
     }
 }
