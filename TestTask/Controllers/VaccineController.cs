@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
+using TestTask.Services;
 
 namespace TestTask.Controllers {
     [Route("api/[controller]")]
@@ -17,6 +19,7 @@ namespace TestTask.Controllers {
         [HttpGet]
         public IActionResult Get() {
             IQueryable<Vaccine> vaccines = repository.GetAll();
+            Log.Information($"{CurrentMethod.GetName()}: получены все препараты");
             return Ok(vaccines);
         }
     }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
+using TestTask.Services;
 
 namespace TestTask.Controllers {
     [Route("api/[controller]")]
@@ -16,67 +18,77 @@ namespace TestTask.Controllers {
         [HttpGet]
         public IActionResult Get() {
             IQueryable<Patient> patients = repository.GetAll();
+            Log.Information($"{CurrentMethod.GetName()}: получены все пациенты");
             return Ok(patients);
         }
         
         [HttpGet("{id}")]
         public IActionResult Get(int id) {
-            IQueryable<Patient> patients = repository.GetByCondition(p => p.Id == id);
-            if (patients.Count() == 0) {
+            Patient patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
+            if (patient == null) {
+                Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
                 return NotFound();
             }
 
-            Patient patient = patients.First();
+            Log.Information($"{CurrentMethod.GetName()}: получен пациент Id = {id}");
             return Ok(patient);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody]Patient patient) {
             if (patient == null) {
+                Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
 
-            IQueryable<Patient> patients = repository.GetByCondition(p => p.SNILS == patient.SNILS);
-            if (patients.Count() != 0) {
-                // пациент с таким СНИЛС уже есть
+            Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
+            if (sameSNILSPatient != null) {
+                Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
                 return Conflict();
             }
             
             repository.Add(patient);
+            Log.Information($"{CurrentMethod.GetName()}: добавлен пациент Id = {patient.Id}");
             return Ok();
         }
         
         [HttpPut]
         public IActionResult Put([FromBody]Patient patient) {
             if (patient == null) {
+                Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
 
-            IQueryable<Patient> sameIdPatients = repository.GetByCondition(p => p.Id == patient.Id);
-            if (sameIdPatients.Count() == 0) {
+            Patient sameIdPatient = repository.GetByCondition(p => p.Id == patient.Id).FirstOrDefault();
+            if (sameIdPatient == null) {
+                Log.Information($"{CurrentMethod.GetName()}: пациент Id = {patient.Id} отсутствует в базе данных");
                 return NotFound();
             }
 
             // если был получен новый СНИЛС, проверить используется ли новый СНИЛС другим пациентом
-            if (sameIdPatients.First().SNILS != patient.SNILS) {
-                IQueryable<Patient> sameSNILSPatients = repository.GetByCondition(p => p.SNILS == patient.SNILS);
-                if (sameSNILSPatients.Count() != 0) {
+            if (sameIdPatient.SNILS != patient.SNILS) {
+                Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
+                if (sameSNILSPatient != null) {
+                    Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
                     return Conflict();
                 }
             }
 
             repository.Update(patient);
+            Log.Information($"{CurrentMethod.GetName()}: изменен пациент Id = {patient.Id}");
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Put(int id) {
-            IQueryable<Patient> patients = repository.GetByCondition(p => p.Id == id);
-            if (patients.Count() == 0) {
+            Patient patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
+            if (patient == null) {
+                Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
                 return NotFound();
             }
 
             repository.Delete(id);
+            Log.Information($"{CurrentMethod.GetName()}: удален пациент Id = {id}");
             return Ok();
         }
     }

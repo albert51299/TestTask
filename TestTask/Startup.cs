@@ -29,9 +29,9 @@ namespace TestTask {
             services.AddReact();
             services.AddJsEngineSwitcher(options => options.DefaultEngineName = ChakraCoreJsEngine.EngineName).AddChakraCore();
             services.AddDbContext<VaccinationsContext>(o => o.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
-            services.AddScoped<IDataRepository<Patient>, PatientManager>();
-            services.AddScoped<IDataRepository<VaccinationVM>, VaccinationManager>();
-            services.AddScoped<IDataRepository<Vaccine>, VaccineManager>();
+            services.AddScoped<IDataRepository<Patient>, PatientRepository>();
+            services.AddScoped<IDataRepository<VaccinationVM>, VaccinationRepository>();
+            services.AddScoped<IDataRepository<Vaccine>, VaccineRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

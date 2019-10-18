@@ -5,10 +5,10 @@ using System.Linq.Expressions;
 using TestTask.Models.Repository;
 
 namespace TestTask.Models.DataManager {
-    public class PatientManager : IDataRepository<Patient> {
+    public class PatientRepository : IDataRepository<Patient> {
         readonly VaccinationsContext db;
 
-        public PatientManager(VaccinationsContext context) {
+        public PatientRepository(VaccinationsContext context) {
             db = context;
         }
 
