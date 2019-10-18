@@ -7,6 +7,12 @@ using TestTask.Services;
 
 namespace TestTask.Controllers
 {
+    /// <summary>
+    /// Контроллер для действий с сущностью "Прививка".
+    /// </summary>
+    /// <remarks>
+    /// Предоставляет методы чтения, создания, изменения, удаления прививок.
+    /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
     public class VaccinationController : ControllerBase
@@ -18,6 +24,10 @@ namespace TestTask.Controllers
             repository = dataRepository;
         }
 
+        /// <summary>
+        /// Чтение всех прививок.
+        /// </summary>
+        /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         [HttpGet]
         public IActionResult Get()
         {
@@ -26,7 +36,11 @@ namespace TestTask.Controllers
             return Ok(vaccinations);
         }
 
-        // получить все прививки пациента
+        /// <summary>
+        /// Чтение всех прививок конкретного пациента.
+        /// </summary>
+        /// <param name="id">Id пациента.</param>
+        /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccinations")]
@@ -40,7 +54,11 @@ namespace TestTask.Controllers
             return Ok(vaccinations);
         }
 
-        // получить вакцину
+        /// <summary>
+        /// Чтение прививки по ее Id.
+        /// </summary>
+        /// <param name="id">Id прививки.</param>
+        /// <returns>HTTP ответ содержащий статус код и прививку, или только статус код.</returns>
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccination")]
@@ -57,6 +75,11 @@ namespace TestTask.Controllers
             return Ok(vaccination);
         }
 
+        /// <summary>
+        /// Добавление прививки.
+        /// </summary>
+        /// <param name="vaccination">Прививка.</param>
+        /// <returns>HTTP ответ со статус кодом.</returns>
         [HttpPost]
         public IActionResult Post([FromBody]VaccinationVM vaccination)
         {
@@ -71,6 +94,11 @@ namespace TestTask.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Изменение данных прививки.
+        /// </summary>
+        /// <param name="vaccination">Новые данные прививки.</param>
+        /// <returns>HTTP ответ со статус-кодом.</returns>
         [HttpPut]
         public IActionResult Put([FromBody]VaccinationVM vaccination)
         {
@@ -92,6 +120,11 @@ namespace TestTask.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Удаление прививки.
+        /// </summary>
+        /// <param name="id">Id удаляемой прививки.</param>
+        /// <returns>HTTP ответ со статус кодом.</returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
