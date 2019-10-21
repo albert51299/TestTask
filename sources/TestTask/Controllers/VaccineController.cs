@@ -28,6 +28,7 @@ namespace TestTask.Controllers
         /// Чтение всех препаратов.
         /// </summary>
         /// <returns>HTTP ответ содержащий статус код и препараты.</returns>
+        /// <response code="200">Возвращает все препараты</response>
         [HttpGet]
         public IActionResult Get()
         {

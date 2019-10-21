@@ -28,6 +28,7 @@ namespace TestTask.Controllers
         /// Чтение всех пациентов.
         /// </summary>
         /// <returns>HTTP ответ содержащий статус код и пациентов.</returns>
+        /// <response code="200">Возвращает всех пациентов</response>
         [HttpGet]
         public IActionResult Get()
         {
@@ -41,6 +42,8 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="id">Id пациента.</param>
         /// <returns>HTTP ответ содержащий статус код и пациента, или только статус код.</returns>
+        /// <response code="200">Возвращает пациента</response>
+        /// <response code="404">Ничего не возвращает</response>
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -60,6 +63,9 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="patient">Пациент.</param>
         /// <returns>HTTP ответ со статус кодом.</returns>
+        /// <response code="200">Ничего не возвращает</response>
+        /// <response code="400">Ничего не возвращает</response>
+        /// <response code="409">Ничего не возвращает</response>
         [HttpPost]
         public IActionResult Post([FromBody]Patient patient)
         {
@@ -89,6 +95,10 @@ namespace TestTask.Controllers
         /// </remarks>
         /// <param name="patient">Новые данные пациента.</param>
         /// <returns>HTTP ответ со статус кодом.</returns>
+        /// <response code="200">Ничего не возвращает</response>
+        /// <response code="400">Ничего не возвращает</response>
+        /// <response code="404">Ничего не возвращает</response>
+        /// <response code="409">Ничего не возвращает</response>
         [HttpPut]
         public IActionResult Put([FromBody]Patient patient)
         {
@@ -126,6 +136,8 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="id">Id удаляемого пациента.</param>
         /// <returns>HTTP ответ со статус кодом.</returns>
+        /// <response code="200">Ничего не возвращает</response>
+        /// <response code="404">Ничего не возвращает</response>
         [HttpDelete("{id}")]
         public IActionResult Put(int id)
         {

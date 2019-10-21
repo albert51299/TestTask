@@ -28,6 +28,7 @@ namespace TestTask.Controllers
         /// Чтение всех прививок.
         /// </summary>
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
+        /// <response code="200">Возвращает все прививки</response>
         [HttpGet]
         public IActionResult Get()
         {
@@ -41,6 +42,7 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="id">Id пациента.</param>
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
+        /// <response code="200">Возвращает все прививки пациента</response>
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccinations")]
@@ -59,6 +61,8 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="id">Id прививки.</param>
         /// <returns>HTTP ответ содержащий статус код и прививку, или только статус код.</returns>
+        /// <response code="200">Возвращает прививку</response>
+        /// <response code="404">Ничего не возвращает</response>
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccination")]
@@ -80,6 +84,8 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="vaccination">Прививка.</param>
         /// <returns>HTTP ответ со статус кодом.</returns>
+        /// <response code="200">Ничего не возвращает</response>
+        /// <response code="400">Ничего не возвращает</response>
         [HttpPost]
         public IActionResult Post([FromBody]VaccinationVM vaccination)
         {
@@ -99,6 +105,9 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="vaccination">Новые данные прививки.</param>
         /// <returns>HTTP ответ со статус-кодом.</returns>
+        /// <response code="200">Ничего не возвращает</response>
+        /// <response code="400">Ничего не возвращает</response>
+        /// <response code="404">Ничего не возвращает</response>
         [HttpPut]
         public IActionResult Put([FromBody]VaccinationVM vaccination)
         {
@@ -125,6 +134,8 @@ namespace TestTask.Controllers
         /// </summary>
         /// <param name="id">Id удаляемой прививки.</param>
         /// <returns>HTTP ответ со статус кодом.</returns>
+        /// <response code="200">Ничего не возвращает</response>
+        /// <response code="404">Ничего не возвращает</response>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
