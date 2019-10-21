@@ -5,8 +5,7 @@ using TestTask.Models;
 using TestTask.Models.Repository;
 using TestTask.Services;
 
-namespace TestTask.Controllers
-{
+namespace TestTask.Controllers {
     /// <summary>
     /// Контроллер для действий с сущностью "Пациент".
     /// </summary>
@@ -15,12 +14,10 @@ namespace TestTask.Controllers
     /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
-    public class PatientController : ControllerBase
-    {
+    public class PatientController : ControllerBase {
         private readonly IDataRepository<Patient> repository;
 
-        public PatientController(IDataRepository<Patient> dataRepository)
-        {
+        public PatientController(IDataRepository<Patient> dataRepository) {
             repository = dataRepository;
         }
 
@@ -30,8 +27,7 @@ namespace TestTask.Controllers
         /// <returns>HTTP ответ содержащий статус код и пациентов.</returns>
         /// <response code="200">Возвращает всех пациентов</response>
         [HttpGet]
-        public IActionResult Get()
-        {
+        public IActionResult Get() {
             IQueryable<Patient> patients = repository.GetAll();
             Log.Information($"{CurrentMethod.GetName()}: получены все пациенты");
             return Ok(patients);
@@ -45,11 +41,9 @@ namespace TestTask.Controllers
         /// <response code="200">Возвращает пациента</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
-        {
+        public IActionResult Get(int id) {
             Patient patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
-            if (patient == null)
-            {
+            if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
                 return NotFound();
             }
@@ -67,17 +61,14 @@ namespace TestTask.Controllers
         /// <response code="400">Ничего не возвращает</response>
         /// <response code="409">Ничего не возвращает</response>
         [HttpPost]
-        public IActionResult Post([FromBody]Patient patient)
-        {
-            if (patient == null)
-            {
+        public IActionResult Post([FromBody]Patient patient) {
+            if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
 
             Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
-            if (sameSNILSPatient != null)
-            {
+            if (sameSNILSPatient != null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
                 return Conflict();
             }
@@ -100,27 +91,22 @@ namespace TestTask.Controllers
         /// <response code="404">Ничего не возвращает</response>
         /// <response code="409">Ничего не возвращает</response>
         [HttpPut]
-        public IActionResult Put([FromBody]Patient patient)
-        {
-            if (patient == null)
-            {
+        public IActionResult Put([FromBody]Patient patient) {
+            if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
 
             Patient sameIdPatient = repository.GetByCondition(p => p.Id == patient.Id).FirstOrDefault();
-            if (sameIdPatient == null)
-            {
+            if (sameIdPatient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент Id = {patient.Id} отсутствует в базе данных");
                 return NotFound();
             }
 
             // если был получен новый СНИЛС, проверить используется ли новый СНИЛС другим пациентом
-            if (sameIdPatient.SNILS != patient.SNILS)
-            {
+            if (sameIdPatient.SNILS != patient.SNILS) {
                 Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
-                if (sameSNILSPatient != null)
-                {
+                if (sameSNILSPatient != null) {
                     Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
                     return Conflict();
                 }
@@ -139,11 +125,9 @@ namespace TestTask.Controllers
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpDelete("{id}")]
-        public IActionResult Put(int id)
-        {
+        public IActionResult Put(int id) {
             Patient patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
-            if (patient == null)
-            {
+            if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
                 return NotFound();
             }

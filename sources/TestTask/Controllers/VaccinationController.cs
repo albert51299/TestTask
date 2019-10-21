@@ -5,8 +5,7 @@ using TestTask.Models;
 using TestTask.Models.Repository;
 using TestTask.Services;
 
-namespace TestTask.Controllers
-{
+namespace TestTask.Controllers {
     /// <summary>
     /// Контроллер для действий с сущностью "Прививка".
     /// </summary>
@@ -15,12 +14,10 @@ namespace TestTask.Controllers
     /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
-    public class VaccinationController : ControllerBase
-    {
+    public class VaccinationController : ControllerBase {
         private readonly IDataRepository<VaccinationVM> repository;
 
-        public VaccinationController(IDataRepository<VaccinationVM> dataRepository)
-        {
+        public VaccinationController(IDataRepository<VaccinationVM> dataRepository) {
             repository = dataRepository;
         }
 
@@ -30,8 +27,7 @@ namespace TestTask.Controllers
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         /// <response code="200">Возвращает все прививки</response>
         [HttpGet]
-        public IActionResult Get()
-        {
+        public IActionResult Get() {
             IQueryable<VaccinationVM> vaccinations = repository.GetAll();
             Log.Information($"{CurrentMethod.GetName()}: получены все прививки");
             return Ok(vaccinations);
@@ -46,8 +42,7 @@ namespace TestTask.Controllers
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccinations")]
-        public IActionResult GetVaccinations(int id)
-        {
+        public IActionResult GetVaccinations(int id) {
             // добавить проверку наличия пациента в бд
             // для этого в этом контроллере нужно получить PatientRepository
 
@@ -66,11 +61,9 @@ namespace TestTask.Controllers
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccination")]
-        public IActionResult GetVaccination(int id)
-        {
+        public IActionResult GetVaccination(int id) {
             VaccinationVM vaccination = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
-            if (vaccination == null)
-            {
+            if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: прививка Id = {id} отсутствует в базе данных");
                 return NotFound();
             }
@@ -87,10 +80,8 @@ namespace TestTask.Controllers
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="400">Ничего не возвращает</response>
         [HttpPost]
-        public IActionResult Post([FromBody]VaccinationVM vaccination)
-        {
-            if (vaccination == null)
-            {
+        public IActionResult Post([FromBody]VaccinationVM vaccination) {
+            if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
@@ -109,17 +100,14 @@ namespace TestTask.Controllers
         /// <response code="400">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpPut]
-        public IActionResult Put([FromBody]VaccinationVM vaccination)
-        {
-            if (vaccination == null)
-            {
+        public IActionResult Put([FromBody]VaccinationVM vaccination) {
+            if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
 
             VaccinationVM vaccinationFromDB = repository.GetByCondition(v => v.Id == vaccination.Id).FirstOrDefault();
-            if (vaccinationFromDB == null)
-            {
+            if (vaccinationFromDB == null) {
                 Log.Information($"{CurrentMethod.GetName()}: прививка Id = {vaccination.Id} отсутствует в базе данных");
                 return NotFound();
             }
@@ -137,11 +125,9 @@ namespace TestTask.Controllers
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
+        public IActionResult Delete(int id) {
             VaccinationVM vaccination = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
-            if (vaccination == null)
-            {
+            if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: прививка Id = {id} отсутствует в базе данных");
                 return NotFound();
             }
