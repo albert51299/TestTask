@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Collections.Generic;
 using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
@@ -27,12 +28,12 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         /// <response code="200">Возвращает все прививки</response>
         [HttpGet]
-        public IActionResult Get() {
+        public ActionResult<IEnumerable<Vaccination>> Get() {
             IQueryable<VaccinationVM> vaccinations = repository.GetAll();
             Log.Information($"{CurrentMethod.GetName()}: получены все прививки");
             return Ok(vaccinations);
         }
-
+        
         /// <summary>
         /// Чтение всех прививок конкретного пациента.
         /// </summary>
@@ -42,7 +43,7 @@ namespace TestTask.Controllers {
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccinations")]
-        public IActionResult GetVaccinations(int id) {
+        public ActionResult<IEnumerable<Vaccination>> GetVaccinations(int id) {
             // добавить проверку наличия пациента в бд
             // для этого в этом контроллере нужно получить PatientRepository
 
@@ -61,7 +62,7 @@ namespace TestTask.Controllers {
         [HttpGet]
         [Route("[action]/{id}")]
         [ActionName("GetVaccination")]
-        public IActionResult GetVaccination(int id) {
+        public ActionResult<Vaccination> GetVaccination(int id) {
             VaccinationVM vaccination = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
             if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: прививка Id = {id} отсутствует в базе данных");

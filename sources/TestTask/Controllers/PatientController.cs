@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Collections.Generic;
 using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
@@ -27,7 +28,7 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ содержащий статус код и пациентов.</returns>
         /// <response code="200">Возвращает всех пациентов</response>
         [HttpGet]
-        public IActionResult Get() {
+        public ActionResult<IEnumerable<Patient>> Get() {
             IQueryable<Patient> patients = repository.GetAll();
             Log.Information($"{CurrentMethod.GetName()}: получены все пациенты");
             return Ok(patients);
@@ -41,7 +42,7 @@ namespace TestTask.Controllers {
         /// <response code="200">Возвращает пациента</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpGet("{id}")]
-        public IActionResult Get(int id) {
+        public ActionResult<Patient> Get(int id) {
             Patient patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
             if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");

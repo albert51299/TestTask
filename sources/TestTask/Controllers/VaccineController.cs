@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Collections.Generic;
 using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
@@ -27,7 +28,7 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ содержащий статус код и препараты.</returns>
         /// <response code="200">Возвращает все препараты</response>
         [HttpGet]
-        public IActionResult Get() {
+        public ActionResult<IEnumerable<Vaccine>> Get() {
             IQueryable<Vaccine> vaccines = repository.GetAll();
             Log.Information($"{CurrentMethod.GetName()}: получены все препараты");
             return Ok(vaccines);
