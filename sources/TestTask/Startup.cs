@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using React.AspNet;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.IO;
 using System.Reflection;
 using TestTask.Models;
 using TestTask.Models.DataManager;
@@ -33,10 +36,18 @@ namespace TestTask {
             services.AddScoped<IDataRepository<VaccinationVM>, VaccinationRepository>();
             services.AddScoped<IDataRepository<Vaccine>, VaccineRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Vaccinations API", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app,IApplicationLifetime lifetime, IHostingEnvironment env) {
+        public void Configure(IApplicationBuilder app, IApplicationLifetime lifetime, IHostingEnvironment env) {
             app.UseReact(config => { });
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -56,10 +67,15 @@ namespace TestTask {
 
             lifetime.ApplicationStarted.Register(() => Log.Write(LogEventLevel.Information, "Application started"));
             // не срабатывает при остановке приложения в visual studio
-            lifetime.ApplicationStopped.Register(() => Log.Write(LogEventLevel.Information,  "Application stopped"));
+            lifetime.ApplicationStopped.Register(() => Log.Write(LogEventLevel.Information, "Application stopped"));
 
             // при такой остановке срабатывает (вызов graceful shutdown)
             //lifetime.StopApplication();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vaccinations API V1");
+            });
         }
     }
 }
