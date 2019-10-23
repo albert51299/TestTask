@@ -16,7 +16,7 @@ class Content extends React.Component {
     }
 
     componentDidMount() {
-        fetch("api/patient", {
+        fetch("api/patient-management/patients", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ class Content extends React.Component {
             .then(response => response.json())
             .then(data => this.setState({ patients: data }) );
 
-        fetch("api/vaccine", {
+        fetch("api/vaccine-management/vaccines", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ class Content extends React.Component {
         if (doRequest) {
             let data = JSON.stringify({ "vaccineName":vaccineName, "consent":consent, "date":date, "patientId":patientId });
 
-            fetch("api/vaccination", {
+            fetch("api/vaccination-management/vaccinations", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

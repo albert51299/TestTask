@@ -15,7 +15,7 @@ class Content extends React.Component {
     }
 
     componentDidMount() {
-        let url = "api/vaccination/getvaccination/" + sessionStorage.getItem("vaccinationId");
+        let url = "api/vaccination-management/vaccinations/" + sessionStorage.getItem("vaccinationId");
         fetch(url, {
             method: "GET",
             headers: {
@@ -39,7 +39,7 @@ class Content extends React.Component {
                     date: formattedDate, patientName: formattedName });
             });
 
-        fetch("api/vaccine", {
+        fetch("api/vaccine-management/vaccines", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ class Content extends React.Component {
         if (doRequest) {
             let data = JSON.stringify({ "id":this.state.id, "vaccineName":vaccineName, "consent":consent, "date":date });
 
-            fetch("api/vaccination", {
+            fetch("api/vaccination-management/vaccinations", {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',

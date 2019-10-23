@@ -8,7 +8,7 @@ class Content extends React.Component {
     }
 
     componentDidMount() {
-        let url = "api/patient/" + sessionStorage.getItem("patientId");
+        let url = "api/patient-management/patients/" + sessionStorage.getItem("patientId");
         fetch(url, {
             method: "GET",
             headers: {
@@ -25,7 +25,7 @@ class Content extends React.Component {
     }
 
     deleteHandler() {
-        fetch("api/patient/" + this.state.id, {
+        fetch("api/patient-management/patients/" + this.state.id, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',

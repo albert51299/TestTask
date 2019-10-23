@@ -52,7 +52,7 @@ class Content extends React.Component {
     }
 
     loadAllVaccinations() {
-        fetch("api/vaccination", {
+        fetch("api/vaccination-management/vaccinations", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

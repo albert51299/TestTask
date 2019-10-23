@@ -8,7 +8,7 @@ class Content extends React.Component {
     }
 
     componentDidMount() {
-        let url = "api/vaccination/getvaccination/" + sessionStorage.getItem("vaccinationId");
+        let url = "api/vaccination-management/vaccinations/" + sessionStorage.getItem("vaccinationId");
         fetch(url, {
             method: "GET",
             headers: {
@@ -35,7 +35,7 @@ class Content extends React.Component {
     }
 
     deleteHandler() {
-        let url = "api/vaccination/" + sessionStorage.getItem("vaccinationId");
+        let url = "api/vaccination-management/vaccinations/" + sessionStorage.getItem("vaccinationId");
         fetch("api/vaccination/" + this.state.id, {
             method: "DELETE",
             headers: {

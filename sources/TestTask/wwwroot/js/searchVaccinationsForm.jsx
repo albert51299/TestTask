@@ -17,7 +17,7 @@ class SearchVaccinationsForm extends React.Component {
     }
 
     componentDidMount() {
-        fetch("api/vaccine", {
+        fetch("api/vaccine-management/vaccines", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

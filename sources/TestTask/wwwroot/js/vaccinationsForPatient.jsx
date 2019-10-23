@@ -24,7 +24,7 @@ class Content extends React.Component {
     }
 
     componentDidMount() {
-        let getPatientURL = "api/patient/" + sessionStorage.getItem("patientId");
+        let getPatientURL = "api/patient-management/patients/" + sessionStorage.getItem("patientId");
         fetch(getPatientURL, {
             method: "GET",
             headers: {
@@ -43,7 +43,7 @@ class Content extends React.Component {
                 this.setState({ id: data.id, SNILS: data.snils, fullName: formattedName, dateOfBirth: formattedDate, gender: data.gender });
             });
 
-        let getVaccinationsURL = "api/vaccination/getvaccinations/" + sessionStorage.getItem("patientId");
+        let getVaccinationsURL = "api/vaccination-management/patients/" + sessionStorage.getItem("patientId") + "/vaccinations";
         fetch(getVaccinationsURL, {
             method: "GET",
             headers: {

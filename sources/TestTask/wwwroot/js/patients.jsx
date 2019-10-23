@@ -54,7 +54,7 @@ class Content extends React.Component {
     }
 
     loadAllPatients() {
-        fetch("api/patient", {
+        fetch("api/patient-management/patients", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

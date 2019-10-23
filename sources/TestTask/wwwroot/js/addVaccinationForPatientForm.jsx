@@ -15,7 +15,7 @@ class Content extends React.Component {
     }
 
     componentDidMount() {
-        let getPatientURL = "api/patient/" + sessionStorage.getItem("patientId");
+        let getPatientURL = "api/patient-management/patients/" + sessionStorage.getItem("patientId");
         fetch(getPatientURL, {
             method: "GET",
             headers: {
@@ -31,7 +31,7 @@ class Content extends React.Component {
                 this.setState({ patientId: data.id, fullName: formattedName });
             });
 
-        fetch("api/vaccine", {
+        fetch("api/vaccine-management/vaccines", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ class Content extends React.Component {
         if (doRequest) {
             let data = JSON.stringify({ "vaccineName":vaccineName, "consent":consent, "date":date, "patientId":this.state.patientId });
 
-            fetch("api/vaccination", {
+            fetch("api/vaccination-management/vaccinations", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

@@ -83,7 +83,7 @@ class Content extends React.Component {
             let data = JSON.stringify({ "firstName":fName, "secondName":sName, "lastName":lName, 
                 "dateOfBirth":date, "gender":gender,  "snils":this.getFormattedSNILS(snils) });
 
-            fetch("api/patient", {
+            fetch("api/patient-management/patients", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
