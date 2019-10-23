@@ -34,21 +34,21 @@ namespace TestTask.Controllers {
             Log.Information($"{CurrentMethod.GetName()}: получены все прививки");
             return Ok(vaccinations);
         }
-        
+
         /// <summary>
         /// Чтение всех прививок конкретного пациента.
         /// </summary>
-        /// <param name="id">Id пациента.</param>
+        /// <param name="patientId">Id пациента.</param>
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         /// <response code="200">Возвращает все прививки пациента</response>
         [HttpGet]
         [Route("patients/{patientId}/vaccinations")]
-        public ActionResult<IEnumerable<Vaccination>> GetVaccinations(int id) {
+        public ActionResult<IEnumerable<Vaccination>> GetVaccinations(int patientId) {
             // добавить проверку наличия пациента в бд
             // для этого в этом контроллере нужно получить PatientRepository
 
-            IQueryable<VaccinationVM> vaccinations = repository.GetByCondition(v => v.PatientId == id);
-            Log.Information($"{CurrentMethod.GetName()}: получены все прививки для пациента PatientId = {id}");
+            IQueryable<VaccinationVM> vaccinations = repository.GetByCondition(v => v.PatientId == patientId);
+            Log.Information($"{CurrentMethod.GetName()}: получены все прививки для пациента PatientId = {patientId}");
             return Ok(vaccinations);
         }
 
