@@ -35,8 +35,7 @@ class Content extends React.Component {
     }
 
     deleteHandler() {
-        let url = "api/vaccination-management/vaccinations/" + sessionStorage.getItem("vaccinationId");
-        fetch("api/vaccination/" + this.state.id, {
+        fetch("api/vaccination-management/vaccinations/" + this.state.id, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',

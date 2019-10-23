@@ -126,8 +126,8 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ со статус кодом.</returns>
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
-        [HttpDelete("{id}")]
-        [Route("vaccinations")]
+        [HttpDelete]
+        [Route("vaccinations/{id}")]
         public IActionResult Delete(int id) {
             VaccinationVM vaccination = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
             if (vaccination == null) {
