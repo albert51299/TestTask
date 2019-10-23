@@ -13,7 +13,7 @@ namespace TestTask.Controllers {
     /// <remarks>
     /// Предоставляет методы чтения, создания, изменения, удаления прививок.
     /// </remarks>
-    [Route("api/[controller]")]
+    [Route("api/vaccination-management")]
     [ApiController]
     public class VaccinationController : ControllerBase {
         private readonly IDataRepository<VaccinationVM> repository;
@@ -28,6 +28,7 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         /// <response code="200">Возвращает все прививки</response>
         [HttpGet]
+        [Route("vaccinations")]
         public ActionResult<IEnumerable<Vaccination>> Get() {
             IQueryable<VaccinationVM> vaccinations = repository.GetAll();
             Log.Information($"{CurrentMethod.GetName()}: получены все прививки");
@@ -41,8 +42,7 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         /// <response code="200">Возвращает все прививки пациента</response>
         [HttpGet]
-        [Route("[action]/{id}")]
-        [ActionName("GetVaccinations")]
+        [Route("patients/{patientId}/vaccinations")]
         public ActionResult<IEnumerable<Vaccination>> GetVaccinations(int id) {
             // добавить проверку наличия пациента в бд
             // для этого в этом контроллере нужно получить PatientRepository
@@ -60,8 +60,7 @@ namespace TestTask.Controllers {
         /// <response code="200">Возвращает прививку</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpGet]
-        [Route("[action]/{id}")]
-        [ActionName("GetVaccination")]
+        [Route("vaccinations/{id}")]
         public ActionResult<Vaccination> GetVaccination(int id) {
             VaccinationVM vaccination = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
             if (vaccination == null) {
@@ -81,6 +80,7 @@ namespace TestTask.Controllers {
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="400">Ничего не возвращает</response>
         [HttpPost]
+        [Route("vaccinations")]
         public IActionResult Post([FromBody]VaccinationVM vaccination) {
             if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
@@ -101,6 +101,7 @@ namespace TestTask.Controllers {
         /// <response code="400">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpPut]
+        [Route("vaccinations")]
         public IActionResult Put([FromBody]VaccinationVM vaccination) {
             if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
@@ -126,6 +127,7 @@ namespace TestTask.Controllers {
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpDelete("{id}")]
+        [Route("vaccinations")]
         public IActionResult Delete(int id) {
             VaccinationVM vaccination = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
             if (vaccination == null) {

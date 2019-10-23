@@ -13,7 +13,7 @@ namespace TestTask.Controllers {
     /// <remarks>
     /// Предоставляет методы чтения, создания, изменения, удаления пациентов.
     /// </remarks>
-    [Route("api/[controller]")]
+    [Route("api/patient-management/patients")]
     [ApiController]
     public class PatientController : ControllerBase {
         private readonly IDataRepository<Patient> repository;
