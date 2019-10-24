@@ -5,6 +5,7 @@ using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
 using TestTask.Services;
+using TestTask.ViewModels;
 
 namespace TestTask.Controllers {
     /// <summary>
@@ -57,26 +58,30 @@ namespace TestTask.Controllers {
         /// Добавление пациента.
         /// </summary>
         /// <param name="patient">Пациент.</param>
-        /// <returns>HTTP ответ со статус кодом.</returns>
-        /// <response code="200">Ничего не возвращает</response>
-        /// <response code="400">Ничего не возвращает</response>
-        /// <response code="409">Ничего не возвращает</response>
+        /// <returns>HTTP ответ содержащий ответ сервиса.</returns>
+        /// <response code="200">Возвращает ответ сервиса</response>
+        /// <response code="400">Возвращает ответ сервиса</response>
+        /// <response code="409">Возвращает ответ сервиса</response>
         [HttpPost]
-        public IActionResult Post([FromBody]Patient patient) {
+        public ActionResult<ResponseVM> Post([FromBody]Patient patient) {
             if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
-                return BadRequest();
+                ResponseVM response400 = new ResponseVM { IsSuccess = false, ErrorMessage = "Bad request", StatusCode = 400, Result = "Не удалось связать модель, patient был равен null" };
+                return BadRequest(response400);
             }
 
             Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
             if (sameSNILSPatient != null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
-                return Conflict();
+                ResponseVM response409 = new ResponseVM { IsSuccess = false, ErrorMessage = "Conflict", StatusCode = 409, Result = "Пациент с таким СНИЛС уже есть" };
+                return Conflict(response409);
             }
 
             repository.Add(patient);
+
             Log.Information($"{CurrentMethod.GetName()}: добавлен пациент Id = {patient.Id}");
-            return Ok();
+            ResponseVM response200 = new ResponseVM { IsSuccess = true, StatusCode = 200, Result = $"Добавлен пациент Id = {patient.Id}" };
+            return Ok(response200);
         }
 
         /// <summary>
@@ -87,22 +92,24 @@ namespace TestTask.Controllers {
         /// </remarks>
         /// <param name="patient">Новые данные пациента.</param>
         /// <param name="id">Id пациента.</param>
-        /// <returns>HTTP ответ со статус кодом.</returns>
-        /// <response code="200">Ничего не возвращает</response>
-        /// <response code="400">Ничего не возвращает</response>
-        /// <response code="404">Ничего не возвращает</response>
-        /// <response code="409">Ничего не возвращает</response>
+        /// <returns>HTTP ответ содержащий ответ сервиса.</returns>
+        /// <response code="200">Возвращает ответ сервиса</response>
+        /// <response code="400">Возвращает ответ сервиса</response>
+        /// <response code="404">Возвращает ответ сервиса</response>
+        /// <response code="409">Возвращает ответ сервиса</response>
         [HttpPut("{id}")]
-        public IActionResult Put([FromRoute]int id, [FromBody]Patient patient) {
+        public ActionResult<ResponseVM> Put([FromRoute]int id, [FromBody]Patient patient) {
             if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
-                return BadRequest();
+                ResponseVM response400 = new ResponseVM { IsSuccess = false, ErrorMessage = "Bad request", StatusCode = 400, Result = "Не удалось связать модель, patient был равен null" };
+                return BadRequest(response400);
             }
 
             Patient sameIdPatient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
             if (sameIdPatient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
-                return NotFound();
+                ResponseVM response404 = new ResponseVM { IsSuccess = false, ErrorMessage = "Not found", StatusCode = 404, Result = $"Пациент Id = {id} отсутствует в базе данных" };
+                return NotFound(response404);
             }
 
             // если был получен новый СНИЛС, проверить используется ли новый СНИЛС другим пациентом
@@ -110,13 +117,16 @@ namespace TestTask.Controllers {
                 Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
                 if (sameSNILSPatient != null) {
                     Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
-                    return Conflict();
+                    ResponseVM response409 = new ResponseVM { IsSuccess = false, ErrorMessage = "Conflict", StatusCode = 409, Result = "Пациент с таким СНИЛС уже есть" };
+                    return Conflict(response409);
                 }
             }
 
             repository.Update(patient);
+
             Log.Information($"{CurrentMethod.GetName()}: изменен пациент Id = {id}");
-            return Ok();
+            ResponseVM response200 = new ResponseVM { IsSuccess = true, StatusCode = 200, Result = $"Изменен пациент Id = {id}" };
+            return Ok(response200);
         }
 
         /// <summary>

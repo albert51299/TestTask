@@ -5,6 +5,7 @@ using System.Linq;
 using TestTask.Models;
 using TestTask.Models.Repository;
 using TestTask.Services;
+using TestTask.ViewModels;
 
 namespace TestTask.Controllers {
     /// <summary>
@@ -76,20 +77,23 @@ namespace TestTask.Controllers {
         /// Добавление прививки.
         /// </summary>
         /// <param name="vaccination">Прививка.</param>
-        /// <returns>HTTP ответ со статус кодом.</returns>
-        /// <response code="200">Ничего не возвращает</response>
-        /// <response code="400">Ничего не возвращает</response>
+        /// <returns>HTTP ответ содержащий ответ сервиса.</returns>
+        /// <response code="200">Возвращает ответ сервиса</response>
+        /// <response code="400">Возвращает ответ сервиса</response>
         [HttpPost]
         [Route("vaccinations")]
-        public IActionResult Post([FromBody]VaccinationVM vaccination) {
+        public ActionResult<ResponseVM> Post([FromBody]VaccinationVM vaccination) {
             if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
-                return BadRequest();
+                ResponseVM response400 = new ResponseVM { IsSuccess = false, ErrorMessage = "Bad request", StatusCode = 400, Result = "Не удалось связать модель, vaccination была равна null" };
+                return BadRequest(response400);
             }
 
             repository.Add(vaccination);
+
             Log.Information($"{CurrentMethod.GetName()}: добавлена прививка Id = {vaccination.Id}");
-            return Ok();
+            ResponseVM response200 = new ResponseVM { IsSuccess = true, StatusCode = 200, Result = $"Добавлена прививка Id = {vaccination.Id}" };
+            return Ok(response200);
         }
 
         /// <summary>
@@ -97,27 +101,30 @@ namespace TestTask.Controllers {
         /// </summary>
         /// <param name="vaccination">Новые данные прививки.</param>
         /// <param name="id">Id прививки.</param>
-        /// <returns>HTTP ответ со статус-кодом.</returns>
-        /// <response code="200">Ничего не возвращает</response>
-        /// <response code="400">Ничего не возвращает</response>
-        /// <response code="404">Ничего не возвращает</response>
+        /// <returns>HTTP ответ содержащий ответ сервиса.</returns>
+        /// <response code="200">Возвращает ответ сервиса</response>
+        /// <response code="400">Возвращает ответ сервиса</response>
+        /// <response code="404">Возвращает ответ сервиса</response>
         [HttpPut]
         [Route("vaccinations/{id}")]
-        public IActionResult Put([FromRoute]int id, [FromBody]VaccinationVM vaccination) {
+        public ActionResult<ResponseVM> Put([FromRoute]int id, [FromBody]VaccinationVM vaccination) {
             if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
-                return BadRequest();
+                ResponseVM response400 = new ResponseVM { IsSuccess = false, ErrorMessage = "Bad request", StatusCode = 400, Result = "Не удалось связать модель, vaccination была равна null" };
+                return BadRequest(response400);
             }
 
             VaccinationVM vaccinationFromDB = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
             if (vaccinationFromDB == null) {
                 Log.Information($"{CurrentMethod.GetName()}: прививка Id = {id} отсутствует в базе данных");
-                return NotFound();
+                ResponseVM response404 = new ResponseVM { IsSuccess = false, ErrorMessage = "Not found", StatusCode = 404, Result = $"Прививка Id = {id} отсутствует в базе данных" };
+                return NotFound(response404);
             }
 
             repository.Update(vaccination);
             Log.Information($"{CurrentMethod.GetName()}: изменена прививка Id = {id}");
-            return Ok();
+            ResponseVM response200 = new ResponseVM { IsSuccess = true, StatusCode = 200, Result = $"Изменена прививка Id = {id}" };
+            return Ok(response200);
         }
 
         /// <summary>
