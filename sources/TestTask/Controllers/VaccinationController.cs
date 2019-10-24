@@ -42,8 +42,8 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ содержащий статус код и прививки.</returns>
         /// <response code="200">Возвращает все прививки пациента</response>
         [HttpGet]
-        [Route("patients/{patientId}/vaccinations")]
-        public ActionResult<IEnumerable<Vaccination>> GetVaccinations(int patientId) {
+        [Route("patients/{patient-id}/vaccinations")]
+        public ActionResult<IEnumerable<Vaccination>> GetVaccinations([FromRoute(Name = "patient-id")]int patientId) {
             // добавить проверку наличия пациента в бд
             // для этого в этом контроллере нужно получить PatientRepository
 
