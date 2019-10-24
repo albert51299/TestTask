@@ -86,21 +86,22 @@ namespace TestTask.Controllers {
         /// Перед изменением проверяется уникальность полученного номера СНИЛС.
         /// </remarks>
         /// <param name="patient">Новые данные пациента.</param>
+        /// <param name="id">Id пациента.</param>
         /// <returns>HTTP ответ со статус кодом.</returns>
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="400">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
         /// <response code="409">Ничего не возвращает</response>
-        [HttpPut]
-        public IActionResult Put([FromBody]Patient patient) {
+        [HttpPut("{id}")]
+        public IActionResult Put([FromRoute]int id, [FromBody]Patient patient) {
             if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
 
-            Patient sameIdPatient = repository.GetByCondition(p => p.Id == patient.Id).FirstOrDefault();
+            Patient sameIdPatient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
             if (sameIdPatient == null) {
-                Log.Information($"{CurrentMethod.GetName()}: пациент Id = {patient.Id} отсутствует в базе данных");
+                Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
                 return NotFound();
             }
 
@@ -114,7 +115,7 @@ namespace TestTask.Controllers {
             }
 
             repository.Update(patient);
-            Log.Information($"{CurrentMethod.GetName()}: изменен пациент Id = {patient.Id}");
+            Log.Information($"{CurrentMethod.GetName()}: изменен пациент Id = {id}");
             return Ok();
         }
 

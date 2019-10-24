@@ -96,26 +96,27 @@ namespace TestTask.Controllers {
         /// Изменение данных прививки.
         /// </summary>
         /// <param name="vaccination">Новые данные прививки.</param>
+        /// <param name="id">Id прививки.</param>
         /// <returns>HTTP ответ со статус-кодом.</returns>
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="400">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
         [HttpPut]
-        [Route("vaccinations")]
-        public IActionResult Put([FromBody]VaccinationVM vaccination) {
+        [Route("vaccinations/{id}")]
+        public IActionResult Put([FromRoute]int id, [FromBody]VaccinationVM vaccination) {
             if (vaccination == null) {
                 Log.Information($"{CurrentMethod.GetName()}: не удалось связать модель");
                 return BadRequest();
             }
 
-            VaccinationVM vaccinationFromDB = repository.GetByCondition(v => v.Id == vaccination.Id).FirstOrDefault();
+            VaccinationVM vaccinationFromDB = repository.GetByCondition(v => v.Id == id).FirstOrDefault();
             if (vaccinationFromDB == null) {
-                Log.Information($"{CurrentMethod.GetName()}: прививка Id = {vaccination.Id} отсутствует в базе данных");
+                Log.Information($"{CurrentMethod.GetName()}: прививка Id = {id} отсутствует в базе данных");
                 return NotFound();
             }
 
             repository.Update(vaccination);
-            Log.Information($"{CurrentMethod.GetName()}: изменена прививка Id = {vaccination.Id}");
+            Log.Information($"{CurrentMethod.GetName()}: изменена прививка Id = {id}");
             return Ok();
         }
 
