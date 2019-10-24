@@ -88,7 +88,7 @@ class Content extends React.Component {
         if (doRequest) {
             let data = JSON.stringify({ "id":this.state.id, "vaccineName":vaccineName, "consent":consent, "date":date });
 
-            fetch("api/vaccination-management/vaccinations", {
+            fetch("api/vaccination-management/vaccinations/" + this.state.id, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
