@@ -13,6 +13,7 @@ namespace TestTask.Controllers {
     /// <remarks>
     /// Предоставляет метод чтения препаратов.
     /// </remarks>
+    [ApiExplorerSettings(GroupName = "API для сущности \"Препарат\"")]
     [Route("api/vaccine-management/vaccines")]
     [ApiController]
     public class VaccineController : ControllerBase {

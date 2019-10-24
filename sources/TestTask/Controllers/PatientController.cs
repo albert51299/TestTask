@@ -14,6 +14,7 @@ namespace TestTask.Controllers {
     /// <remarks>
     /// Предоставляет методы чтения, создания, изменения, удаления пациентов.
     /// </remarks>
+    [ApiExplorerSettings(GroupName = "API для сущности \"Пациент\"")]
     [Route("api/patient-management/patients")]
     [ApiController]
     public class PatientController : ControllerBase {
