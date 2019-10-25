@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TestTask.Models;
@@ -43,9 +45,25 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ содержащий статус код и пациента, или только статус код.</returns>
         /// <response code="200">Возвращает пациента</response>
         /// <response code="404">Ничего не возвращает</response>
+        /// <response code="500">Ничего не возвращает</response>
+        /// <example>
+        /// Пример кода, вызывающего исключение System.ArgumentNullException.
+        /// <code>
+        /// Patient patient = repository.GetByCondition(null).FirstOrDefault();
+        /// </code>
+        /// </example>
+        /// <exception cref="ArgumentNullException">Происходит когда аргумент равен null.</exception>
         [HttpGet("{id}")]
         public ActionResult<Patient> Get(int id) {
-            Patient patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
+            Patient patient = null;
+            try {
+                patient = repository.GetByCondition(null).FirstOrDefault();
+            }
+            catch (ArgumentNullException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
+                return StatusCode(500);
+            }
+
             if (patient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
                 return NotFound();
@@ -63,6 +81,16 @@ namespace TestTask.Controllers {
         /// <response code="200">Возвращает ответ сервиса</response>
         /// <response code="400">Возвращает ответ сервиса</response>
         /// <response code="409">Возвращает ответ сервиса</response>
+        /// <response code="500">Возвращает ответ сервиса</response>
+        /// <example>
+        /// Пример кода, вызывающего исключение System.ArgumentNullException.
+        /// <code>
+        /// Patient sameSNILSPatient = repository.GetByCondition(null).FirstOrDefault();
+        /// </code>
+        /// </example>
+        /// <exception cref="ArgumentNullException">Происходит когда аргумент равен null.</exception>
+        /// <exception cref="DbUpdateConcurrencyException"></exception>
+        /// <exception cref="DbUpdateException"></exception>
         [HttpPost]
         public ActionResult<ResponseVM> Post([FromBody]Patient patient) {
             if (patient == null) {
@@ -71,14 +99,35 @@ namespace TestTask.Controllers {
                 return BadRequest(response400);
             }
 
-            Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
+            Patient sameSNILSPatient = null;
+            try {
+                sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
+            }
+            catch (ArgumentNullException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
+                ResponseVM response500 = new ResponseVM {IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                return StatusCode(500, response500);
+            }
+            
             if (sameSNILSPatient != null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
                 ResponseVM response409 = new ResponseVM { IsSuccess = false, ErrorMessage = "Conflict", StatusCode = 409, Result = "Пациент с таким СНИЛС уже есть" };
                 return Conflict(response409);
             }
 
-            repository.Add(patient);
+            try {
+                repository.Add(patient);
+            }
+            catch (DbUpdateConcurrencyException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
+                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                return StatusCode(500, response500);
+            }
+            catch (DbUpdateException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
+                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                return StatusCode(500, response500);
+            }
 
             Log.Information($"{CurrentMethod.GetName()}: добавлен пациент Id = {patient.Id}");
             ResponseVM response200 = new ResponseVM { IsSuccess = true, StatusCode = 200, Result = $"Добавлен пациент Id = {patient.Id}" };
@@ -98,6 +147,16 @@ namespace TestTask.Controllers {
         /// <response code="400">Возвращает ответ сервиса</response>
         /// <response code="404">Возвращает ответ сервиса</response>
         /// <response code="409">Возвращает ответ сервиса</response>
+        /// <response code="500">Возвращает ответ сервиса</response>
+        /// <example>
+        /// Пример кода, вызывающего исключение System.ArgumentNullException.
+        /// <code>
+        /// Patient sameSNILSPatient = repository.GetByCondition(null).FirstOrDefault();
+        /// </code>
+        /// </example>
+        /// <exception cref="ArgumentNullException">Происходит когда аргумент равен null.</exception>
+        /// <exception cref="DbUpdateConcurrencyException"></exception>
+        /// <exception cref="DbUpdateException"></exception>
         [HttpPut("{id}")]
         public ActionResult<ResponseVM> Put([FromRoute]int id, [FromBody]Patient patient) {
             if (patient == null) {
@@ -106,7 +165,16 @@ namespace TestTask.Controllers {
                 return BadRequest(response400);
             }
 
-            Patient sameIdPatient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
+            Patient sameIdPatient = null;
+            try {
+                sameIdPatient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
+            }
+            catch (ArgumentNullException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
+                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                return StatusCode(500, response500);
+            }
+
             if (sameIdPatient == null) {
                 Log.Information($"{CurrentMethod.GetName()}: пациент Id = {id} отсутствует в базе данных");
                 ResponseVM response404 = new ResponseVM { IsSuccess = false, ErrorMessage = "Not found", StatusCode = 404, Result = $"Пациент Id = {id} отсутствует в базе данных" };
@@ -115,7 +183,16 @@ namespace TestTask.Controllers {
 
             // если был получен новый СНИЛС, проверить используется ли новый СНИЛС другим пациентом
             if (sameIdPatient.SNILS != patient.SNILS) {
-                Patient sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
+                Patient sameSNILSPatient = null;
+                try {
+                    sameSNILSPatient = repository.GetByCondition(p => p.SNILS == patient.SNILS).FirstOrDefault();
+                }
+                catch (ArgumentNullException e) {
+                    Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
+                    ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                    return StatusCode(500, response500);
+                }
+
                 if (sameSNILSPatient != null) {
                     Log.Information($"{CurrentMethod.GetName()}: пациент с таким СНИЛС уже есть");
                     ResponseVM response409 = new ResponseVM { IsSuccess = false, ErrorMessage = "Conflict", StatusCode = 409, Result = "Пациент с таким СНИЛС уже есть" };
@@ -123,7 +200,24 @@ namespace TestTask.Controllers {
                 }
             }
 
-            repository.Update(patient);
+            try {
+                repository.Update(patient);
+            }
+            catch (ArgumentNullException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
+                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                return StatusCode(500, response500);
+            }
+            catch (DbUpdateConcurrencyException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
+                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                return StatusCode(500, response500);
+            }
+            catch (DbUpdateException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
+                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                return StatusCode(500, response500);
+            }
 
             Log.Information($"{CurrentMethod.GetName()}: изменен пациент Id = {id}");
             ResponseVM response200 = new ResponseVM { IsSuccess = true, StatusCode = 200, Result = $"Изменен пациент Id = {id}" };
@@ -137,6 +231,10 @@ namespace TestTask.Controllers {
         /// <returns>HTTP ответ со статус кодом.</returns>
         /// <response code="200">Ничего не возвращает</response>
         /// <response code="404">Ничего не возвращает</response>
+        /// <response code="500">Ничего не возвращает</response>
+        /// <exception cref="ArgumentNullException">Происходит когда аргумент равен null.</exception>
+        /// <exception cref="DbUpdateConcurrencyException"></exception>
+        /// <exception cref="DbUpdateException"></exception>
         [HttpDelete("{id}")]
         public IActionResult Put(int id) {
             Patient patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
@@ -145,7 +243,22 @@ namespace TestTask.Controllers {
                 return NotFound();
             }
 
-            repository.Delete(id);
+            try {
+                repository.Delete(id);
+            }
+            catch (ArgumentNullException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
+                return StatusCode(500);
+            }
+            catch (DbUpdateConcurrencyException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
+                return StatusCode(500);
+            }
+            catch (DbUpdateException e) {
+                Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
+                return StatusCode(500);
+            }
+
             Log.Information($"{CurrentMethod.GetName()}: удален пациент Id = {id}");
             return Ok();
         }
