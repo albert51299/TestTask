@@ -14,7 +14,7 @@ namespace TestTask.Controllers {
     /// <remarks>
     /// Предоставляет методы чтения, создания, изменения, удаления прививок.
     /// </remarks>
-    [ApiExplorerSettings(GroupName = "API для сущности \"Прививка\"")]
+    [ApiExplorerSettings(GroupName = "vaccination-management")]
     [Route("api/vaccination-management")]
     [ApiController]
     public class VaccinationController : ControllerBase {
