@@ -57,7 +57,7 @@ namespace TestTask.Controllers {
         public ActionResult<Patient> Get(int id) {
             Patient patient = null;
             try {
-                patient = repository.GetByCondition(null).FirstOrDefault();
+                patient = repository.GetByCondition(p => p.Id == id).FirstOrDefault();
             }
             catch (ArgumentNullException e) {
                 Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
