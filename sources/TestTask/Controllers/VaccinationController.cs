@@ -132,12 +132,14 @@ namespace TestTask.Controllers {
             }
             catch (DbUpdateConcurrencyException e) {
                 Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
-                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                //ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                ResponseVM response500 = new ResponseVM(isStatusCode500: true);
                 return StatusCode(500, response500);
             }
             catch (DbUpdateException e) {
                 Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
-                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                //ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                ResponseVM response500 = new ResponseVM(isStatusCode500: true);
                 return StatusCode(500, response500);
             }
 
@@ -180,7 +182,8 @@ namespace TestTask.Controllers {
             }
             catch (ArgumentNullException e) {
                 Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
-                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                //ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                ResponseVM response500 = new ResponseVM(isStatusCode500: true);
                 return StatusCode(500, response500);
             }
 
@@ -195,17 +198,20 @@ namespace TestTask.Controllers {
             }
             catch (ArgumentNullException e) {
                 Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Параметр не может быть равен null\n  Имя параметра: {e.ParamName}\n  Стек вызовов:\n{e.StackTrace}");
-                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                //ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                ResponseVM response500 = new ResponseVM(isStatusCode500: true);
                 return StatusCode(500, response500);
             }
             catch (DbUpdateConcurrencyException e) {
                 Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
-                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                //ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                ResponseVM response500 = new ResponseVM(isStatusCode500: true);
                 return StatusCode(500, response500);
             }
             catch (DbUpdateException e) {
                 Log.Error($"{CurrentMethod.GetName()}: при обработке запроса произошло исключение {e.GetType()}\n  Метод вызвавший исключение: {e.TargetSite.Name}\n  Стек вызовов:\n{e.StackTrace}");
-                ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                //ResponseVM response500 = new ResponseVM { IsSuccess = false, ErrorMessage = "Internal server error", StatusCode = 500, Result = "Внутренняя ошибка сервера" };
+                ResponseVM response500 = new ResponseVM(isStatusCode500: true);
                 return StatusCode(500, response500);
             }
 
