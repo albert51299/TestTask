@@ -25,7 +25,7 @@
         public object Data { get; set; }
 
         /// <summary>
-        /// 
+        /// Конструктор класса.
         /// </summary>
         /// <param name="isStatusCode500">Равен ли номер статус кода 500.</param>
         public ResponseVM(bool isStatusCode500 = false) {
