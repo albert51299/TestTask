@@ -27,14 +27,28 @@ namespace TestTask.Controllers {
         }
 
         /// <summary>
-        /// Чтение всех пациентов.
+        /// Чтение пациентов.
         /// </summary>
+        /// <param name="page">Номер страницы.</param>
+        /// <param name="pageSize">Количество записей на одной странице.</param>
         /// <returns>HTTP ответ содержащий статус код и пациентов.</returns>
         /// <response code="200">Возвращает всех пациентов</response>
+        /// <response code="400">Ничего не возвращает</response>
         [HttpGet]
-        public ActionResult<IEnumerable<Patient>> Get() {
-            IQueryable<Patient> patients = repository.GetAll();
-            Log.Information($"{CurrentMethod.GetName()}: получены все пациенты");
+        [Route("")]
+        [Route("{page}/{page-size}")]
+        public ActionResult<IEnumerable<Patient>> Get([FromRoute(Name = "page")]int page = 0, [FromRoute(Name = "page-size")]int pageSize = 10) {
+            int skipCount = page * pageSize;
+            int takeCount = pageSize;
+
+            int patientsCount = repository.GetAll().Count();
+            if (skipCount >= patientsCount || skipCount < 0 || takeCount <= 0) {
+                Log.Information($"{CurrentMethod.GetName()}: неверный диапазон (начиная с {skipCount} выбрать {takeCount})");
+                return BadRequest();
+            }
+
+            IQueryable<Patient> patients = repository.GetRangeByCondition(skipCount, takeCount);
+            Log.Information($"{CurrentMethod.GetName()}: получены пациенты (начиная с {skipCount} выбрать {takeCount})");
             return Ok(patients);
         }
 
