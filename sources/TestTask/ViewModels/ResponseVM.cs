@@ -23,5 +23,18 @@
         /// Отправляемые данные (могут отсутствовать).
         /// </summary>
         public object Data { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isStatusCode500">Равен ли номер статус кода 500.</param>
+        public ResponseVM(bool isStatusCode500 = false) {
+            if (isStatusCode500) {
+                IsSuccess = false;
+                ErrorMessage = "Internal server error";
+                StatusCode = 500;
+                Result = "Внутренняя ошибка сервера";
+            }
+        }
     }
 }
