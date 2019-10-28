@@ -30,5 +30,9 @@ namespace TestTask.Models.DataManager {
         public void Update(Vaccine entity) {
             throw new NotImplementedException();
         }
+
+        public IQueryable<Vaccine> GetRangeByCondition(int skipCount, int takeCount, Expression<Func<Vaccine, bool>> expression = null) {
+            throw new NotImplementedException();
+        }
     }
 }

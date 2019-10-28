@@ -46,5 +46,9 @@ namespace TestTask.Models.DataManager {
             db.Vaccinations.Remove(vaccination);
             db.SaveChanges();
         }
+
+        public IQueryable<VaccinationVM> GetRangeByCondition(int skipCount, int takeCount, Expression<Func<VaccinationVM, bool>> expression = null) {
+            throw new NotImplementedException();
+        }
     }
 }
