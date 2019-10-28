@@ -42,5 +42,14 @@ namespace TestTask.Models.DataManager {
             db.Patients.Remove(patient);
             db.SaveChanges();
         }
+
+        public IQueryable<Patient> GetRangeByCondition(int skipCount, int takeCount, Expression<Func<Patient, bool>> expression = null) {
+            if (expression == null) {
+                return db.Patients.Skip(skipCount).Take(takeCount);
+            }
+            else {
+                return db.Patients.Skip(skipCount).Take(takeCount).Where(expression);
+            }
+        }
     }
 }
